@@ -9,8 +9,8 @@
 namespace Constants {
     inline constexpr unsigned int MAX_LAWN_WIDTH = 100000; // cm
     inline constexpr unsigned int MIN_LAWN_WIDTH = 100; // cm
-    inline constexpr unsigned int MAX_LAWN_LENGTH = Constants::MAX_LAWN_WIDTH;
-    inline constexpr unsigned int MIN_LAWN_LENGTH = Constants::MIN_LAWN_WIDTH;
+    inline constexpr unsigned int MAX_LAWN_LENGTH = MAX_LAWN_WIDTH;
+    inline constexpr unsigned int MIN_LAWN_LENGTH = MIN_LAWN_WIDTH;
     inline constexpr unsigned int LAWN_SIDES_MAX_RATIO = 10; 
     inline constexpr unsigned int LAWN_SIDE_PRECISION = 10; //cm
     inline constexpr double PI = 3.14159265358979;
