@@ -13,6 +13,6 @@ include_directories(libs/googletest/googletest/include)
 add_executable(mover_simulator src/Main.cc src/Config.cc)
 
 # Tests
-add_executable(ConfigTests tests/ConfigTests.cc)
+add_executable(ConfigTests tests/ConfigTests.cc src/Config.cc)
 target_link_libraries(ConfigTests gtest gtest_main pthread)
 add_test(NAME ConfigTests COMMAND ConfigTests)
