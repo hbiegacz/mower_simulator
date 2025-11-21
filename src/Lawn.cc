@@ -13,7 +13,8 @@ using namespace std;
 
 
 Lawn::Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length)
-    : width_(lawn_width), length_(lawn_length), fields_(lawn_length, std::vector<bool>(lawn_width, false)) {}
+    : width_(lawn_width), length_(lawn_length), 
+    fields_(Config::VERTICAL_FIELDS_NUMBER, std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false)) {}
 
 
 unsigned int Lawn::getWidth() {
@@ -21,17 +22,17 @@ unsigned int Lawn::getWidth() {
 }
 
 
-unsigned int Lawn::getLength(){
+unsigned int Lawn::getLength() {
     return length_;
 }
 
 
-bool Lawn::isPointInLawn(const double& x, const double& y) {
-    // check if point is located inside the lawn.
+std::vector<std::vector<bool>> Lawn::getFields() {
+    return fields_;
+}
 
-    unsigned int vertical_points_number = fields_.size();
-    unsigned int horizontal_points_number = fields_[0].size();
-    
+
+bool Lawn::isPointInLawn(const double& x, const double& y) {
     bool is_point_in_lawn_vertical = Lawn::countIfCoordInSection(length_, y);
     bool is_point_in_lawn_horizontal = Lawn::countIfCoordInSection(width_, x);
 
@@ -58,11 +59,16 @@ pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, co
 unsigned int Lawn::calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
         const unsigned int& vector_size) {
     unsigned int INDEX_OFFSET = 1;
-    
+
     unsigned int index = static_cast<unsigned int>(ceil(coord_value / Config::FIELD_WIDTH));
     if (index != 0) {
         index -= INDEX_OFFSET;
     }
 
     return index;
+}
+
+
+void Lawn::cutGrassOnField(const pair<unsigned int, unsigned int>& indexes) {
+    fields_[indexes.second][indexes.first] = true;
 }
