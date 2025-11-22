@@ -1,3 +1,11 @@
+/*
+    Author: Hanna Biegacz
+
+    Represents a marker point placed by user on the lawn. 
+    Point consists of x and y coordinates (double values) and unique identifier (unsigned int). 
+    Each Point is assigned auto-incremented ID via static id_counter to ensure uniqueness. 
+*/
+
 #ifndef POINT_H
 #define POINT_H
 
