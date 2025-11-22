@@ -80,3 +80,26 @@ TEST(Constructor, constructorThrowsErrOnBothNegative) {
     EXPECT_THROW({ Point point = Point(-100.0, -200.0); }, std::invalid_argument);
 }
 
+
+
+
+TEST(IdCounter, autoIncrementId) {
+    Point first = Point(0.0, 0.0);
+    Point second = Point(0.0, 0.0);
+    Point third = Point(100.0, 200.0);
+
+    EXPECT_LT(first.getId(), second.getId());
+    EXPECT_LT(second.getId(), third.getId());
+    EXPECT_EQ(second.getId(), first.getId() + 1);
+    EXPECT_EQ(third.getId(), second.getId() + 1);
+}
+
+TEST(IdCounter, eachPointHasUniqueId) {
+    Point p1 = Point(0.0, 0.0);
+    Point p2 = Point(0.0, 0.0);
+    Point p3 = Point(100.0, 100.0);
+    
+    EXPECT_NE(p1.getId(), p2.getId());
+    EXPECT_NE(p1.getId(), p3.getId());
+    EXPECT_NE(p2.getId(), p3.getId());
+}
