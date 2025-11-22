@@ -39,3 +39,10 @@ void Point::setPosition(const double& x, const double& y) {
     x_ = x;
     y_ = y;
 }
+
+double Point::calcDistanceTo(const Point& other) const {
+    double dx = x_ - other.x_;
+    double dy = y_ - other.y_;
+    
+    return sqrt(dx * dx + dy * dy);
+}
