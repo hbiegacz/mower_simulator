@@ -20,3 +20,7 @@ add_test(NAME ConfigTests COMMAND ConfigTests)
 add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc)
 target_link_libraries(LawnTests gtest gtest_main pthread)
 add_test(NAME LawnTests COMMAND LawnTests)
+
+add_executable(PointTests tests/PointTests.cc src/Point.cc)
+target_link_libraries(PointTests gtest gtest_main)
+add_test(NAME PointTests COMMAND PointTests)
