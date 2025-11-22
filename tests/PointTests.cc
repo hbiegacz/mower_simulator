@@ -9,7 +9,7 @@
 #include "../include/Constants.h"
 using namespace std;
 
-TEST(Constructor, constructorSetsCoordinates) {
+TEST(constructor, constructorSetsCoordinates) {
     double x = 1500.5;
     double y = 2300.7;
     
@@ -19,28 +19,28 @@ TEST(Constructor, constructorSetsCoordinates) {
     EXPECT_DOUBLE_EQ(y, point.getY());
 }
 
-TEST(Constructor, constructorOriginPoint) {
+TEST(constructor, constructorOriginPoint) {
     Point point = Point(0.0, 0.0);
 
     EXPECT_DOUBLE_EQ(0.0, point.getX());
     EXPECT_DOUBLE_EQ(0.0, point.getY());
 }
 
-TEST(Constructor, constructorZeroXPositiveY) {
+TEST(constructor, constructorZeroXPositiveY) {
     Point point = Point(0.0, 500.0);
 
     EXPECT_DOUBLE_EQ(0.0, point.getX());
     EXPECT_DOUBLE_EQ(500.0, point.getY());
 }
 
-TEST(Constructor, constructorPositiveXZeroY) {
+TEST(constructor, constructorPositiveXZeroY) {
     Point point = Point(500.0, 0.0);
 
     EXPECT_DOUBLE_EQ(500.0, point.getX());
     EXPECT_DOUBLE_EQ(0.0, point.getY());
 }
 
-TEST(Constructor, constructorMaximalValues) {
+TEST(constructor, constructorMaximalValues) {
     double x = static_cast<double>(Constants::MAX_LAWN_WIDTH);
     double y = static_cast<double>(Constants::MAX_LAWN_LENGTH);
     
@@ -50,7 +50,7 @@ TEST(Constructor, constructorMaximalValues) {
     EXPECT_DOUBLE_EQ(y, point.getY());
 }
 
-TEST(Constructor, constructorVerySmallPositiveValues) {
+TEST(constructor, constructorVerySmallPositiveValues) {
     double x = 0.0001;
     double y = 0.0001;
     
@@ -60,23 +60,23 @@ TEST(Constructor, constructorVerySmallPositiveValues) {
     EXPECT_DOUBLE_EQ(y, point.getY());
 }
 
-TEST(Constructor, constructorThrowsErrOnNegativeX) {
+TEST(constructor, constructorThrowsErrOnNegativeX) {
     EXPECT_THROW({ Point point = Point(-0.1, 100.0); }, std::invalid_argument);
 }
 
-TEST(Constructor, constructorThrowsErrOnVerySmallNegativeX) {
+TEST(constructor, constructorThrowsErrOnVerySmallNegativeX) {
     EXPECT_THROW({  Point point = Point(-0.0001, 100.0); }, std::invalid_argument);
 }
 
-TEST(Constructor, constructorThrowsErrOnNegativeY) {
+TEST(constructor, constructorThrowsErrOnNegativeY) {
     EXPECT_THROW({ Point point = Point(100.0, -0.1); }, std::invalid_argument);
 }
 
-TEST(Constructor, constructorThrowsErrOnVerySmallNegativeY) {
+TEST(constructor, constructorThrowsErrOnVerySmallNegativeY) {
     EXPECT_THROW({ Point point = Point(100.0, -0.0001); }, std::invalid_argument);
 }
 
-TEST(Constructor, constructorThrowsErrOnBothNegative) {
+TEST(constructor, constructorThrowsErrOnBothNegative) {
     EXPECT_THROW({ Point point = Point(-100.0, -200.0); }, std::invalid_argument);
 }
 
