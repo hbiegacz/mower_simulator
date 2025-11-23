@@ -17,6 +17,9 @@ namespace Config {
     extern double FIELD_WIDTH; // cm
     extern unsigned int HORIZONTAL_FIELDS_NUMBER;
     extern unsigned int VERTICAL_FIELDS_NUMBER;
+    extern unsigned int MIN_SPEED; // cm/s
+    extern unsigned int MAX_SPEED; // cm/s 
+
     
     void initializeRuntimeConstants(const unsigned int& lawn_width, const unsigned int& lawn_length);
 }
