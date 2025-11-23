@@ -1,0 +1,40 @@
+/* 
+    Author: Maciej Cieslik
+    
+    Describes mover. Mover has rectangular shape with blade, which middle is located in the cetral point of teh mover.
+    Blade cuts grass in circula area. The mover moves in continuous space(mover can cover the part of the field).
+    Location of mover is described by coordinates(x, y) of it's middle point.
+*/
+
+class Mover {
+private:
+    unsigned int width_; // cm
+    unsigned int length_; // cm
+    unsigned int blade_diameter_; // cm
+    unsigned int speed_; // cm/s
+    unsigned short angle_; // (0-359) degree
+    double x_;
+    double y_;
+
+public:
+    Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
+        const unsigned int& speed);
+    Mover(const Mover&) = delete;
+    Mover& operator=(const Mover&) = delete;
+    
+    unsigned int getWidth() const;
+    unsigned int getLength() const;
+    unsigned int getBladeDiameter() const;
+    unsigned int getSpeed() const;
+    unsigned int getAngle() const;
+    unsigned int getX() const;
+    unsigned int getY() const;
+
+    void setAngle(const unsigned short& new_angle);
+    void setX(const unsigned short& new_x);
+    void setY(const unsigned short& new_y);
+
+    void move(const double& x, const double& y);
+    void rotate(const unsigned short& angle);
+    void cutGrass();
+};
