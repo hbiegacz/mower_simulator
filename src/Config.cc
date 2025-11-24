@@ -23,6 +23,11 @@ namespace Config {
     unsigned int VERTICAL_FIELDS_NUMBER = 0;
     unsigned int MIN_SPEED = 0;
     unsigned int MAX_SPEED = 0;
+    unsigned short STARTING_ANGLE = 0;
+    double STARTING_X = 0.0;
+    double STARTING_Y = 0.0;
+    double MAX_HORIZONTAL_EXCEEDANCE = 0.0;
+    double MAX_VERTICAL_EXCEEDANCE = 0.0;
 
     void initializeRuntimeConstants(const unsigned int& lawn_width, const unsigned int& lawn_length) {
         MIN_BLADE_DIAMETER = max(Constants::ABSOLUTE_MIN_BLADE_DIAMETER, 
@@ -45,5 +50,14 @@ namespace Config {
             lawn_length / Constants::MIN_SPEED_DIVISION_FACTOR));
         MAX_SPEED = min(Constants::ABSOLUTE_MAX_SPEED, min(lawn_width / Constants::MAX_SPEED_DIVISION_FACTOR, 
             lawn_length / Constants::MAX_SPEED_DIVISION_FACTOR));
+    }
+
+    void initializeMoverConstants(const unsigned int& mover_width, const unsigned int& mover_length, 
+        const double& starting_x, const double& starting_y, const unsigned short& starting_angle) {
+        MAX_HORIZONTAL_EXCEEDANCE = static_cast<double>(mover_width) / 2.0;
+        MAX_VERTICAL_EXCEEDANCE = static_cast<double>(mover_length) / 2.0;
+        STARTING_X = starting_x;
+        STARTING_Y = starting_y;
+        STARTING_ANGLE = starting_angle;
     }
 }
