@@ -26,13 +26,13 @@ public:
     unsigned int getLength() const;
     unsigned int getBladeDiameter() const;
     unsigned int getSpeed() const;
-    unsigned int getAngle() const;
-    unsigned int getX() const;
-    unsigned int getY() const;
+    unsigned short getAngle() const;
+    double getX() const;
+    double getY() const;
 
     void setAngle(const unsigned short& new_angle);
-    void setX(const unsigned short& new_x);
-    void setY(const unsigned short& new_y);
+    void setX(const double& new_x);
+    void setY(const double& new_y);
 
     void move(const double& x, const double& y);
     void rotate(const unsigned short& angle);
