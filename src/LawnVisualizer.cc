@@ -16,18 +16,9 @@ LawnVisualizer::LawnVisualizer(Lawn* lawn, QWidget* parent)
         throw std::invalid_argument("Lawn pointer cannot be null");
     }
     
-              << lawn_->getWidth() << "cm x " 
-              << lawn_->getLength() << "cm" << std::endl;
-    
     auto fields = lawn_->getFields();
-              << fields[0].size() << " cols x " 
-              << fields.size() << " rows" << std::endl;
-              << (fields[0].size() * fields.size()) << std::endl;
-    
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-    
-              << DEFAULT_WINDOW_WIDTH << "x" << DEFAULT_WINDOW_HEIGHT << std::endl;
 }
 
 void LawnVisualizer::refresh() {
@@ -47,6 +38,7 @@ void LawnVisualizer::paintEvent(QPaintEvent* event) {
     painter.setRenderHint(QPainter::Antialiasing, false);
     
     drawLawnGrid(painter);
+    
 }
 
 void LawnVisualizer::drawLawnGrid(QPainter& painter) {
@@ -57,8 +49,8 @@ void LawnVisualizer::drawLawnGrid(QPainter& painter) {
     
     double field_width_px = static_cast<double>(width()) / num_cols;
     double field_height_px = static_cast<double>(height()) / num_rows;
-    
     bool draw_grid_lines = (field_width_px >= 2.0 && field_height_px >= 2.0);
+    
     unsigned int mowed_count = 0;
     unsigned int unmowed_count = 0;
     
