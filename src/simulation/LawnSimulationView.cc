@@ -1,3 +1,8 @@
+/* 
+    Author: Hanna Biegacz
+    
+    LawnSimulationView implementation. 
+*/
 #include "simulation/LawnSimulationView.h"
 #include "../../include/Lawn.h"
 #include <QPainter>

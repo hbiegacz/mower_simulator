@@ -1,3 +1,9 @@
+/* 
+    Author: Hanna Biegacz
+    
+    SimulationEngine implementation. 
+*/
+
 #include "simulation/SimulationEngine.h"
 #include "../../include/Lawn.h"
 #include <iostream>

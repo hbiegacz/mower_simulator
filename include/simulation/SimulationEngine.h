@@ -1,8 +1,15 @@
 /* 
     Author: Hanna Biegacz
     
-
+    Runs the lawn mowing simulation in a separate thread.
+    Controls how fast the simulation runs and keeps lawn data safe
+    when multiple parts of the program need to access it at the same time.
+    
+    PROTOTYPE STAGE: Right now this class automatically mows grass row by row
+    to test the visualization system. In the final version, a Mower object
+    will handle the actual mowing logic.
 */
+
 #pragma once
 
 #include <thread>

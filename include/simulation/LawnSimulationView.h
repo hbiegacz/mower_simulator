@@ -1,11 +1,13 @@
 /* 
     Author: Hanna Biegacz, Maciej Cieślik
     
-    GUI widget responsible for rendering the lawn state using Qt.
-    Displays mowed fields in brown and unmowed fields in green.
-    Uses QTimer to periodically refresh the view at specified FPS.
-    Thread-safe access to lawn data via provided mutex.
+    Displays the lawn on screen and shows which parts have been mowed.
+    Green color means grass is still there, brown means it has been cut.
+    
+    Updates the display regularly (default 60 times per second) using a timer.
+    Safely reads lawn data even when the simulation thread is changing it.
 */
+
 #pragma once
 
 #include <QWidget>
