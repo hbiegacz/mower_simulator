@@ -10,7 +10,7 @@ set(CMAKE_AUTOUIC ON)
 
 enable_testing()
 
-# --- Qt config Test ---
+# --- Qt config  ---
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Threads REQUIRED)
 
@@ -38,3 +38,7 @@ add_test(NAME LawnTests COMMAND LawnTests)
 add_executable(PointTests tests/PointTests.cc src/Point.cc)
 target_link_libraries(PointTests gtest gtest_main)
 add_test(NAME PointTests COMMAND PointTests)
+
+add_executable(SimulationTests tests/SimulationTests.cc src/simulation/SimulationEngine.cc src/Lawn.cc src/Config.cc)
+target_link_libraries(SimulationTests gtest gtest_main pthread Threads::Threads)
+add_test(NAME SimulationTests COMMAND SimulationTests)
