@@ -5,7 +5,7 @@
     bool element in 2-dimensional vector. False meaning the grass is not cut, true meaning the grass is cut. 
     Left down corner point has coordinates (0.0, 0.0).
 */
-
+#pragma once
 #include <vector>
 
 class Lawn {
