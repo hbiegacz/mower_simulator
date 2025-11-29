@@ -76,13 +76,13 @@ void SimulationEngine::simulationLoop() {
         
         next_tick += Ms(adjusted_timestep);
         
-        executeSimulationStep();
+         executePrototypeMowingStep();  // TODO: Replace with mower_->update() or sth
         
         this_thread::sleep_until(next_tick);
     }
 }
 
-void SimulationEngine::executeSimulationStep() {
+void SimulationEngine::executePrototypeMowingStep() {
     lock_guard<mutex> lock(lawn_mutex_);
     
     auto fields = lawn_->getFields();

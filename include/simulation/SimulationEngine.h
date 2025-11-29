@@ -1,7 +1,7 @@
 /* 
     Author: Hanna Biegacz
     
-    // TODO: description
+
 */
 #pragma once
 
@@ -30,7 +30,7 @@ public:
     
 private:
     void simulationLoop();
-    void executeSimulationStep();
+    void executePrototypeMowingStep(); // TODO: Replace with Mower class 
     
     Lawn* lawn_;
     std::thread simulation_thread_;
@@ -38,8 +38,9 @@ private:
     std::atomic<double> speed_multiplier_;
     std::mutex lawn_mutex_;
     
-    unsigned int current_row_;
-    unsigned int current_col_;
+    // TODO: Remove these fields when Mower class is implemented
+    unsigned int current_row_;   // Temporary: tracks mock mowing position
+    unsigned int current_col_;   // Temporary: tracks mock mowing position
     
     static constexpr int TIMESTEP_MS = 10;
 };
