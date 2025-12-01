@@ -10,6 +10,14 @@ cmake ..
 make 
 ./mower_simulator
 ```
+After that you can run tests with the following command:
+```
+ctest
+```
+## Dependencies and necesary tools
+- gtest (can be downloaded using *setup_extra_libraries.sh*)
+- Qt5
+- pthread
 
 ## Prototype stage - 01.12.2025
 Implemented features:
