@@ -48,3 +48,17 @@ double Mover::getX() const {
 double Mover::getY() const {
     return y_;
 }
+
+
+void Mover::setAngle(const unsigned short& newAngle) {
+    angle_ = newAngle;
+}
+
+
+void Mover::setX(const double& newX) {
+    x_ = newX;
+}
+
+void Mover::setY(const double& newY) {
+    y_ = newY;
+}
