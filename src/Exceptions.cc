@@ -17,3 +17,13 @@ MoveOutsideLawnError::MoveOutsideLawnError(const string& message)
 const char* MoveOutsideLawnError::what() const noexcept {
     return msg.c_str();
 }
+
+
+RotationAngleOutOfRangeError::RotationAngleOutOfRangeError(const string& message)
+    : msg(message) {}
+
+
+const char* RotationAngleOutOfRangeError::what() const noexcept {
+    return msg.c_str();
+}
+
