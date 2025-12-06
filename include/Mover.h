@@ -40,6 +40,6 @@ public:
     void setY(const double& new_y);
 
     void move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length);
-    void rotate(const unsigned short& angle);
+    void rotate(const short& angle);
     void cutGrass();
 };
