@@ -22,6 +22,7 @@ namespace Constants {
     inline constexpr unsigned int ABSOLUTE_MAX_SPEED = 1000; // cm/s
     inline constexpr unsigned int MIN_SPEED_DIVISION_FACTOR = 1000;
     inline constexpr unsigned int MAX_SPEED_DIVISION_FACTOR = 10;
+    inline constexpr double DISTANCE_PRECISION = 0.001; // cm
 
     inline constexpr double PI = 3.14159265358979;
 }
