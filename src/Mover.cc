@@ -116,3 +116,15 @@ bool Mover::calculateIfYAccessible(const double& calculatedY, const unsigned int
     return (calculatedY <= static_cast<double>(lawn_length) + Config::MAX_VERTICAL_EXCEEDANCE &&
         calculatedY >= -Config::MAX_VERTICAL_EXCEEDANCE);
 }
+
+
+void Mover::rotate(const short& angle) {
+    short MAX_ROTATION_ANGLE = 360;
+    short MIN_ROTATION_ANGLE = -360;
+    if (angle > MAX_ROTATION_ANGLE || angle < MIN_ROTATION_ANGLE) {
+        throw RotationAngleOutOfRangeError("Ratation angle must be in [-360; 360] range.");
+    }
+
+    unsigned short calculatedAngle = (getAngle() + angle + MAX_ROTATION_ANGLE) % MAX_ROTATION_ANGLE;
+    setAngle(calculatedAngle);
+}
