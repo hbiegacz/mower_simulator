@@ -4,13 +4,15 @@ set -e
 PROJECT_DIR=$(pwd)
 GTEST_DIR="$PROJECT_DIR/libs/googletest"
 
-echo "cInstalling Build Tools (CMake, Make, GCC)..."
+echo "=== Project extra libraries setup ==="
+echo
+echo "Updating package list..."
+sudo apt-get update
+echo
+echo "I. Installing Build Tools (CMake, Make, GCC)..."
 if command -v apt-get &> /dev/null; then
-    echo "Updating package list..."
-    sudo apt-get update
-    echo
-    echo "Installing: build-essential, cmake, git..."
-    sudo apt-get install -y build-essential cmake git
+    echo "Installing: build-essential, cmake..."
+    sudo apt-get install -y build-essential cmake
     echo "Build tools installed successfully."
 else
     echo
@@ -18,6 +20,8 @@ else
     echo "Please ensure 'cmake', 'make', 'g++' (build-essential) are installed."
 fi
 
+echo
+echo "II. Downloading Qt5..."
 if command -v apt-get &> /dev/null; then
     sudo apt-get install -y qtbase5-dev qt5-qmake qtbase5-dev-tools
 else
@@ -25,8 +29,11 @@ else
     echo "WARNING: 'apt-get' not found. Skipping automatic Qt5 installation."
     echo "Please ensure 'qtbase5-dev' and build tools are installed manually."
 fi
-mkdir -p "$PROJECT_DIR/libs"
 
+
+echo
+echo "III. Configuring Google Test..."
+mkdir -p "$PROJECT_DIR/libs"
 if [ -d "$GTEST_DIR" ]; then
     echo "Google Test directory already exists. Skipping clone."
 else
@@ -45,3 +52,6 @@ if [ ! -d "$GTEST_DIR/build" ]; then
 else
     echo "Google Test build directory already exists."
 fi
+
+echo
+echo "=== Setup process finished! ==="
