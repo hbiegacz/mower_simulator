@@ -4,6 +4,7 @@ Authors: *Hanna Biegacz, Maciej Cieślik*
 ## Running the Simulation
 In order to start the mower simulator, run:
 ```
+./setup_extra_libraries.sh
 mkdir build/
 cd build/
 cmake ..
@@ -15,9 +16,10 @@ After that you can run tests with the following command:
 ctest
 ```
 ## Dependencies and necesary tools
-- gtest (can be downloaded using *setup_extra_libraries.sh*)
-- Qt5
-- pthread
+- **Libraries**: Google Test, Qt5, pthread
+- **Tools**: CMake, Make
+
+For a quick setup, please verify the contents of `setup_extra_dependencies.sh` and run it.
 
 ## Prototype stage - 01.12.2025
 Implemented features:
