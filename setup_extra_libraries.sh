@@ -3,6 +3,15 @@ set -e
 
 PROJECT_DIR=$(pwd)
 GTEST_DIR="$PROJECT_DIR/libs/googletest"
+echo "Installing Qt5 dependency ..."
+if command -v apt-get &> /dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y build-essential cmake qtbase5-dev qt5-qmake qtbase5-dev-tools
+else
+    echo
+    echo "WARNING: 'apt-get' not found. Skipping automatic Qt5 installation."
+    echo "Please ensure 'qtbase5-dev' and build tools are installed manually."
+fi
 
 mkdir -p "$PROJECT_DIR/libs"
 
