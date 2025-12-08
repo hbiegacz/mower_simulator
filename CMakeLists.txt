@@ -22,22 +22,26 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mower_simulator src/Main.cc src/Config.cc src/Lawn.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc)
+add_executable(mower_simulator src/Main.cc src/Config.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc)
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
 
-
 # Tests
-add_executable(ConfigTests tests/ConfigTests.cc src/Config.cc)
+add_executable(ConfigTests tests/ConfigTests.cc src/Config.cc src/Exceptions.cc)
 target_link_libraries(ConfigTests gtest gtest_main pthread)
 add_test(NAME ConfigTests COMMAND ConfigTests)
 
-add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc)
+add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc src/Exceptions.cc)
 target_link_libraries(LawnTests gtest gtest_main pthread)
 add_test(NAME LawnTests COMMAND LawnTests)
 
-add_executable(PointTests tests/PointTests.cc src/Point.cc)
+add_executable(PointTests tests/PointTests.cc src/Point.cc src/Exceptions.cc)
 target_link_libraries(PointTests gtest gtest_main)
 add_test(NAME PointTests COMMAND PointTests)
+
+
+add_executable(MoverTests tests/MoverTests.cc src/Mover.cc src/Config.cc src/Exceptions.cc) 
+target_link_libraries(MoverTests gtest gtest_main)
+add_test(NAME MoverTests COMMAND MoverTests)
 
 add_executable(SimulationTests tests/SimulationTests.cc src/simulation/SimulationEngine.cc src/Lawn.cc src/Config.cc)
 target_link_libraries(SimulationTests gtest gtest_main pthread Threads::Threads)
