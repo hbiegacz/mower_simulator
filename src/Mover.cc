@@ -74,12 +74,12 @@ void Mover::move(const double& distance, const unsigned int& lawn_width, const u
         Throws MoveOutsideLawnError when destination point(the middle of the mower) is outside the lawn */
 
     pair<double, double>(calculatedPoint) = calculateFinalPoint(distance);
-    double calculatedX = calculatedPoint.first;
-    double calculatedY = calculatedPoint.second;
+    double calculated_x = calculatedPoint.first;
+    double calculated_y = calculatedPoint.second;
     
-    if (calculateIfXAccessible(calculatedX, lawn_width) && calculateIfYAccessible(calculatedY, lawn_length)) {
-        setX(calculatedX);
-        setY(calculatedY);
+    if (calculateIfXAccessible(calculated_x, lawn_width) && calculateIfYAccessible(calculated_y, lawn_length)) {
+        setX(calculated_x);
+        setY(calculated_y);
     }
     else {
         throw MoveOutsideLawnError("Attempted to move outside the lawn.");
@@ -89,12 +89,12 @@ void Mover::move(const double& distance, const unsigned int& lawn_width, const u
 
 pair<double, double> Mover::calculateFinalPoint(const double& distance) const {
     const double ANGLE_IN_RADIANS = convertDegreesToRadians();
-    double calculatedX = getX() + sin(ANGLE_IN_RADIANS) * distance;
-    double calculatedY = getY() + cos(ANGLE_IN_RADIANS) * distance;
-    double roundedX = round(calculatedX / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
-    double roundedY = round(calculatedY / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
+    double calculated_x = getX() + sin(ANGLE_IN_RADIANS) * distance;
+    double calculated_y = getY() + cos(ANGLE_IN_RADIANS) * distance;
+    double rounded_x = round(calculated_x / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
+    double rounded_y = round(calculated_y / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
     
-    return pair<double, double>(roundedX, roundedY);
+    return pair<double, double>(rounded_x, rounded_y);
 }
 
 
@@ -106,15 +106,15 @@ double Mover::convertDegreesToRadians() const {
 }
 
 
-bool Mover::calculateIfXAccessible(const double& calculatedX, const unsigned int& lawn_width) const {
-    return (calculatedX <= static_cast<double>(lawn_width) + Config::MAX_HORIZONTAL_EXCEEDANCE &&
-        calculatedX >= -Config::MAX_HORIZONTAL_EXCEEDANCE);
+bool Mover::calculateIfXAccessible(const double& calculated_x, const unsigned int& lawn_width) const {
+    return (calculated_x <= static_cast<double>(lawn_width) + Config::MAX_HORIZONTAL_EXCEEDANCE &&
+        calculated_x >= -Config::MAX_HORIZONTAL_EXCEEDANCE);
 }
 
 
-bool Mover::calculateIfYAccessible(const double& calculatedY, const unsigned int& lawn_length) const {
-    return (calculatedY <= static_cast<double>(lawn_length) + Config::MAX_VERTICAL_EXCEEDANCE &&
-        calculatedY >= -Config::MAX_VERTICAL_EXCEEDANCE);
+bool Mover::calculateIfYAccessible(const double& calculated_y, const unsigned int& lawn_length) const {
+    return (calculated_y <= static_cast<double>(lawn_length) + Config::MAX_VERTICAL_EXCEEDANCE &&
+        calculated_y >= -Config::MAX_VERTICAL_EXCEEDANCE);
 }
 
 
@@ -125,6 +125,6 @@ void Mover::rotate(const short& angle) {
         throw RotationAngleOutOfRangeError("Ratation angle must be in [-360; 360] range.");
     }
 
-    unsigned short calculatedAngle = (getAngle() + angle + MAX_ROTATION_ANGLE) % MAX_ROTATION_ANGLE;
-    setAngle(calculatedAngle);
+    unsigned short calculated_angle = (getAngle() + angle + MAX_ROTATION_ANGLE) % MAX_ROTATION_ANGLE;
+    setAngle(calculated_angle);
 }
