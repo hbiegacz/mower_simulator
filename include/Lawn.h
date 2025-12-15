@@ -21,15 +21,17 @@ private:
         const std::pair<double, double>& destination_point);
     unsigned int countCornersInArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
         const double& blade_diameter);
+    std::pair<double, double> calculateFirstMowingFieldCoords(const std::pair<double, double>& blade_middle, 
+        const double& blade_diameter) const;
 
 public:
     Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length);
     Lawn(const Lawn&) = delete;
     Lawn& operator=(const Lawn&) = delete;
 
-    unsigned int getWidth();
-    unsigned int getLength();
-    std::vector<std::vector<bool>> getFields();
+    unsigned int getWidth() const;
+    unsigned int getLength() const;
+    std::vector<std::vector<bool>> getFields() const;
 
     bool isPointInLawn(const double& x, const double& y);
     std::pair<unsigned int, unsigned int> calculateFieldIndexes(const double& x, const double& y);
