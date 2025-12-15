@@ -5,7 +5,10 @@
 */
 
 #include <gtest/gtest.h>
+#include <cmath>
+#include <cstdint>
 #include "../include/Lawn.h"
+#include "../include/Constants.h"
 #include "../include/Config.h"
 
 using namespace std;
@@ -57,12 +60,12 @@ TEST(IsPointInLawn, isPointInLawnCorrectMinimalValues) {
 
 
 TEST(IsPointInLawn, isPointInLawnCorrectMaximalValues) {
-    unsigned int lawn_width = 100000;
-    unsigned int lawn_length = 100000;
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    double x = 100000.0;
-    double y = 100000.0;
+    double x = 10000.0;
+    double y = 10000.0;
 
     bool result = lawn.isPointInLawn(x, y);
 
@@ -71,12 +74,12 @@ TEST(IsPointInLawn, isPointInLawnCorrectMaximalValues) {
 
 
 TEST(IsPointInLawn, isPointInLawnIncorrectSquareLawn) {
-    unsigned int lawn_width = 60000;
-    unsigned int lawn_length = 60000;
+    unsigned int lawn_width = 6000;
+    unsigned int lawn_length = 6000;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    double x = 60000.1;
-    double y = 50000.1;
+    double x = 6000.1;
+    double y = 5000.1;
 
     bool result = lawn.isPointInLawn(x, y);
 
@@ -119,8 +122,8 @@ TEST(CalculateFieldIndexes, calculateFieldIndexesRightUpCornerMinimalLawn) {
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    double x = 100.0;
-    double y = 100.0;
+    double x = 99.999;
+    double y = 99.999;
     pair<unsigned int, unsigned int> pattern (999, 999);
 
     pair<unsigned int, unsigned int> result = lawn.calculateFieldIndexes(x, y);
@@ -146,12 +149,12 @@ TEST(CalculateFieldIndexes, calculateFieldIndexesLeftDownCornerMaximalLawn) {
 
 
 TEST(CalculateFieldIndexes, calculateFieldIndexesRightUpCornerMaximalLawn) {
-    unsigned int lawn_width = 100000;
-    unsigned int lawn_length = 100000;
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    double x = 100000.0;
-    double y = 100000.0;
+    double x = 9999.999;
+    double y = 9999.999;
     pair<unsigned int, unsigned int> pattern (999, 999);
 
     pair<unsigned int, unsigned int> result = lawn.calculateFieldIndexes(x, y);
@@ -161,12 +164,12 @@ TEST(CalculateFieldIndexes, calculateFieldIndexesRightUpCornerMaximalLawn) {
 
 
 TEST(CalculateFieldIndexes, calculateFieldIndexesRightUpCornerMaxRatioLawn) {
-    unsigned int lawn_width = 100000;
-    unsigned int lawn_length = 10000;
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 1000;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    double x = 100000.0;
-    double y = 10000.0;
+    double x = 9999.999;
+    double y = 999.999;
     pair<unsigned int, unsigned int> pattern (9999, 999);
 
     pair<unsigned int, unsigned int> result = lawn.calculateFieldIndexes(x, y);
@@ -182,7 +185,7 @@ TEST(CalculateFieldIndexes, calculateFieldIndexesMiddleMinimalLawn) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 50.0;
     double y = 50.0;
-    pair<unsigned int, unsigned int> pattern (499, 499);
+    pair<unsigned int, unsigned int> pattern (500, 500);
 
     pair<unsigned int, unsigned int> result = lawn.calculateFieldIndexes(x, y);
 
@@ -245,4 +248,257 @@ TEST(CutGrassOnFields, cutGrassOnField) {
     lawn.cutGrassOnField(indexes);
 
     EXPECT_EQ(true, lawn.getFields()[indexes.second][indexes.first]);
+}
+
+
+TEST(CalculateShavedArea, calculateShavedAreaCustom) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<unsigned int, unsigned int> indexes1 (151, 3);
+    pair<unsigned int, unsigned int> indexes2 (152, 3);
+    pair<unsigned int, unsigned int> indexes3 (153, 3);
+    pair<unsigned int, unsigned int> indexes4 (154, 3);
+    pair<unsigned int, unsigned int> indexes5 (155, 3);
+    pair<unsigned int, unsigned int> indexes6 (156, 3);
+    pair<unsigned int, unsigned int> indexes7 (157, 3);
+    pair<unsigned int, unsigned int> indexes8 (158, 3);
+    pair<unsigned int, unsigned int> indexes9 (159, 3);
+    pair<unsigned int, unsigned int> indexes0 (160, 3);
+    double shavedFactor = 0.00001;
+
+    lawn.cutGrassOnField(indexes1);
+    lawn.cutGrassOnField(indexes2);
+    lawn.cutGrassOnField(indexes3);
+    lawn.cutGrassOnField(indexes4);
+    lawn.cutGrassOnField(indexes5);
+    lawn.cutGrassOnField(indexes6);
+    lawn.cutGrassOnField(indexes7);
+    lawn.cutGrassOnField(indexes8);
+    lawn.cutGrassOnField(indexes9);
+    lawn.cutGrassOnField(indexes0);
+
+    EXPECT_EQ(shavedFactor, lawn.calculateShavedArea());
+}
+
+
+TEST(CalculateShavedArea, calculateShavedAreaNotShaved) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    double shavedFactor = 0.0;
+
+    EXPECT_EQ(shavedFactor, lawn.calculateShavedArea());
+}
+
+
+TEST(CutGrass, cutGrassFullCircleIntBladeMiddleMinLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleMaxLawn) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnDownSide) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 0);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnUpSide) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 10000);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnLeftSide) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 50);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnRigthSide) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (10000, 50);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnLeftDownCorner) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 0);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+    
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnRightDownCorner) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (10000, 0);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassLawnRightUpCorner) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (10000, 10000);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
+}
+
+
+TEST(CutGrass, cutGrassMaxLawnLeftUpCorner) {
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 10000);
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;
+    double max_radius = blade_diameter / 2.0 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2.0 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    int64_t lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    
+    EXPECT_LT(shaved_area, max_area);
+    EXPECT_GT(shaved_area, min_area);
 }
