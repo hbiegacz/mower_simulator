@@ -32,6 +32,79 @@ TEST(Getters, Getters) {
 }
 
 
+TEST(OperatorEquals, equals) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width, lawn_length);
+
+    bool result = lawn == lawn2;
+    EXPECT_TRUE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsLawnWidth) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
+
+    bool result = lawn == lawn2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsLawnLength) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width, lawn_length + 1);
+
+    bool result = lawn == lawn2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsFields) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width, lawn_length);
+    lawn2.cutGrassOnField(std::pair<unsigned int, unsigned int>(1, 1));
+
+    bool result = lawn == lawn2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorNotEquals, OperatorEquals_notEqualsLawnWidth_Test) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
+
+    bool result = lawn != lawn2;
+    EXPECT_TRUE(result);
+}
+
+
+TEST(OperatorNotEquals, equals) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Lawn lawn2 = Lawn(lawn_width, lawn_length);
+
+    bool result = lawn != lawn2;
+    EXPECT_FALSE(result);
+}
+
+
 TEST(IsPointInLawn, isPointInLawnCorrect) {
     unsigned int lawn_width = 100;
     unsigned int lawn_length = 100;
