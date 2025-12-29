@@ -23,6 +23,7 @@ namespace Constants {
     inline constexpr unsigned int MIN_SPEED_DIVISION_FACTOR = 1000;
     inline constexpr unsigned int MAX_SPEED_DIVISION_FACTOR = 10;
     inline constexpr double DISTANCE_PRECISION = 0.001; // cm
-
+    inline constexpr u_int64_t TICK_DURATION = 20; // ms
+    
     inline constexpr double PI = 3.14159265358979;
 }
