@@ -15,6 +15,8 @@ private:
 public:
     Log(const u_int64_t& time, const std::string& message);
     Log(const Log&) = delete;
+    Log(Log&&) = default;
+    Log& operator=(Log&&) = default;
     Log& operator=(const Log&) = delete;
     bool operator==(const Log& other) const;
     bool operator!=(const Log& other) const;
