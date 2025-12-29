@@ -23,7 +23,8 @@ Mover::Mover(const unsigned int& width, const unsigned int& length, const unsign
 bool Mover::operator==(const Mover& other) const {
     return this->width_ == other.getWidth() && this->length_ == other.getLength() &&
         this->blade_diameter_ == other.getBladeDiameter() && this->speed_ == other.getSpeed() &&
-        this->angle_ == other.getAngle() && this->x_ == other.getX() && this->y_ == other.getY();
+        this->angle_ == other.getAngle() && std::fabs(this->x_ - other.getX()) < Constants::DISTANCE_PRECISION &&
+           std::fabs(this->y_ - other.getY()) < Constants::DISTANCE_PRECISION;
 }
 
 
