@@ -26,6 +26,8 @@ public:
         const unsigned int& speed);
     Mover(const Mover&) = delete;
     Mover& operator=(const Mover&) = delete;
+    bool operator==(const Mover& other) const;
+    bool operator!=(const Mover& other) const;
     
     unsigned int getWidth() const;
     unsigned int getLength() const;
