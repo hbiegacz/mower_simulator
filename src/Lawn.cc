@@ -22,12 +22,13 @@ Lawn::Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length)
 
 
 bool Lawn::operator==(const Lawn& other) const {
-    return false;
+    return this->width_ == other.getWidth() && this->length_ == other.getLength() && 
+        this->fields_ == other.getFields();
 }
 
 
 bool Lawn::operator!=(const Lawn& other) const {
-    return true;
+    return !((*this) == other);
 }
 
 
