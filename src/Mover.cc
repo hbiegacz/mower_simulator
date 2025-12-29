@@ -20,6 +20,18 @@ Mover::Mover(const unsigned int& width, const unsigned int& length, const unsign
         angle_(Config::STARTING_ANGLE), x_(Config::STARTING_X), y_(Config::STARTING_Y) {}
 
 
+bool Mover::operator==(const Mover& other) const {
+    return this->width_ == other.getWidth() && this->length_ == other.getLength() &&
+        this->blade_diameter_ == other.getBladeDiameter() && this->speed_ == other.getSpeed() &&
+        this->angle_ == other.getAngle() && this->x_ == other.getX() && this->y_ == other.getY();
+}
+
+
+bool Mover::operator!=(const Mover& other) const {
+    return !((*this) == other);
+}
+
+
 unsigned int Mover::getWidth() const {
     return width_;
 }    
