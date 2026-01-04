@@ -323,6 +323,37 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngle) {
 }
 
 
+TEST(SimulateMovement, moveOutsideLawnCustomAngleOver180) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 500, 500, 225);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    double distance = 1000;
+    double result_x = 0;
+    double result_y = 0;
+    unsigned short result_angle = 225;
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mover.getSpeed();
+    uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
+    int result_logger_size = 1;
+
+    stateSimulation.simulateMovement(distance);
+
+    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_EQ(result_time, stateSimulation.getTime());
+    EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
+}
+
+
 TEST(SimulateRotation, rotate) {
     unsigned int lawn_width = 1000;
     unsigned int lawn_length = 1000;
