@@ -243,36 +243,7 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     pair<double, double> addition_factors = calculateAdditionFactors(angle);
     pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(left_side_x, down_side_y);
     double beginning_x = indexes.first * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
-    double beginning_y = indexes.second * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
-
-    cout << "a_mover_path: " << a_mover_path << endl << flush;
-    cout << "a_perpendicular: " << a_perpendicular << endl << flush;
-    std::cout << "x_left_beginning = " << x_left_beginning << std::endl << flush;
-    std::cout << "x_right_beginning = " << x_right_beginning << std::endl << flush;
-    std::cout << "x_left_ending = " << x_left_ending << std::endl << flush;
-    std::cout << "x_right_ending = " << x_right_ending << std::endl << flush;
-
-    std::cout << "b_horizontal_beginning = " << b_horizontal_beginning << std::endl << flush;
-    std::cout << "b_horizontal_ending = " << b_horizontal_ending << std::endl << flush;
-
-    std::cout << "y_left_beginning = " << y_left_beginning << std::endl << flush;
-    std::cout << "y_right_beginning = " << y_right_beginning << std::endl << flush;
-    std::cout << "y_left_ending = " << y_left_ending << std::endl << flush;
-    std::cout << "y_right_ending = " << y_right_ending << std::endl << flush;
-
-    std::cout << "b_vertical_left = " << b_vertical_left << std::endl << flush;
-    std::cout << "b_vertical_right = " << b_vertical_right << std::endl << flush;
-
-    std::cout << "max_b_horizontal = " << max_b_horizontal << std::endl << flush;
-    std::cout << "min_b_horizontal = " << min_b_horizontal << std::endl << flush;
-    std::cout << "max_b_vertical = " << max_b_vertical << std::endl << flush;
-    std::cout << "min_b_vertical = " << min_b_vertical << std::endl << flush;
-
-    std::cout << "left_side_x = " << left_side_x << std::endl << flush;
-    std::cout << "right_side_x = " << right_side_x << std::endl << flush;
-    std::cout << "down_side_y = " << down_side_y << std::endl << flush;
-    std::cout << "up_side_y = " << up_side_y << std::endl << flush;
-                     
+    double beginning_y = indexes.second * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;                  
     
     for (int current_y = beginning_y; current_y < up_side_y && current_y > down_side_y; 
         current_y += addition_factors.second) {
@@ -280,10 +251,8 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
             current_x += addition_factors.first) {
             double b_horizontal = current_y - a_perpendicular * current_x;
             double b_vertical = current_y - a_mover_path * current_x;
-            cout << "current x: " << current_x << endl;
-            cout << "current y: " << current_y << endl;
-            if (min_b_horizontal <= b_horizontal <= max_b_horizontal &&
-                min_b_vertical <= b_vertical <= max_b_vertical && isPointInLawn(current_x, current_y)) {
+            if (min_b_horizontal <= b_horizontal && b_horizontal <= max_b_horizontal && 
+                min_b_vertical <= b_vertical && b_vertical <= max_b_vertical && isPointInLawn(current_x, current_y)) {
                 pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(current_x, current_y);
                 cutGrassOnField(indexes); 
             }
