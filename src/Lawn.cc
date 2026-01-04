@@ -227,7 +227,7 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     double y_right_ending = a_perpendicular * x_right_ending + b_horizontal_ending;
 
     double b_vertical_left = y_left_beginning - a_mover_path * x_left_beginning;
-    double b_vertical_right = y_right_beginning - a_perpendicular * x_right_beginning;
+    double b_vertical_right = y_right_beginning - a_mover_path * x_right_beginning;
 
     double max_b_horizontal = max(b_horizontal_beginning, b_horizontal_ending);
     double min_b_horizontal = min(b_horizontal_beginning, b_horizontal_ending);
@@ -237,8 +237,8 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     double left_side_x = min(x_left_beginning, x_left_ending);
     double right_side_x = max(x_right_beginning, x_right_ending);
 
-    double up_side_y = max(max(y_left_beginning, y_right_beginning), max(y_right_beginning, y_right_ending));
-    double down_side_y = min(min(y_left_beginning, y_right_beginning), min(y_right_beginning, y_right_ending));
+    double up_side_y = max(max(y_left_beginning, y_right_beginning), max(y_left_ending, y_right_ending));
+    double down_side_y = min(min(y_left_beginning, y_right_beginning), min(y_left_ending, y_right_ending));
 
     pair<double, double> addition_factors = calculateAdditionFactors(angle);
     pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(left_side_x, down_side_y);
@@ -270,10 +270,14 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
 
     std::cout << "left_side_x = " << left_side_x << std::endl << flush;
     std::cout << "right_side_x = " << right_side_x << std::endl << flush;
+    std::cout << "down_side_y = " << down_side_y << std::endl << flush;
+    std::cout << "up_side_y = " << up_side_y << std::endl << flush;
                      
     
-    for (int current_y = beginning_y; current_y < up_side_y; current_y += addition_factors.second) {
-        for (int current_x = beginning_x; current_x < right_side_x; current_x += addition_factors.first) {
+    for (int current_y = beginning_y; current_y < up_side_y && current_y > down_side_y; 
+        current_y += addition_factors.second) {
+        for (int current_x = beginning_x; current_x < right_side_x && current_x > left_side_x; 
+            current_x += addition_factors.first) {
             double b_horizontal = current_y - a_perpendicular * current_x;
             double b_vertical = current_y - a_mover_path * current_x;
             cout << "current x: " << current_x << endl;
