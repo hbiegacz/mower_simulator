@@ -244,62 +244,33 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     double down_side_y = min(min(y_left_beginning, y_right_beginning), min(y_left_ending, y_right_ending));
 
     pair<double, double> addition_factors = calculateAdditionFactors(angle);     
-    
-    int counter = 0;
-    std::cout << "angle_in_radians: " << angle_in_radians << std::endl;
-    std::cout << "a_mover_path: " << a_mover_path << std::endl;
-    std::cout << "a_perpendicular: " << a_perpendicular << std::endl << std::endl;
 
-    std::cout << "x_left_beginning: " << x_left_beginning << std::endl;
-    std::cout << "x_right_beginning: " << x_right_beginning << std::endl;
-    std::cout << "x_left_ending: " << x_left_ending << std::endl;
-    std::cout << "x_right_ending: " << x_right_ending << std::endl << std::endl;
+    double start_y = (addition_factors.second > 0) ? down_side_y : up_side_y;
+    double end_y   = (addition_factors.second > 0) ? up_side_y : down_side_y;
+    double start_x = (addition_factors.first > 0) ? left_side_x : right_side_x;
+    double end_x   = (addition_factors.first > 0) ? right_side_x : left_side_x;
 
-    std::cout << "b_horizontal_beginning: " << b_horizontal_beginning << std::endl;
-    std::cout << "b_horizontal_ending: " << b_horizontal_ending << std::endl << std::endl;
+    double current_y = start_y;
+    while ((addition_factors.second > 0 && current_y <= end_y) ||
+        (addition_factors.second < 0 && current_y >= end_y)) {
+        double current_x = start_x;
 
-    std::cout << "y_left_beginning: " << y_left_beginning << std::endl;
-    std::cout << "y_right_beginning: " << y_right_beginning << std::endl;
-    std::cout << "y_left_ending: " << y_left_ending << std::endl;
-    std::cout << "y_right_ending: " << y_right_ending << std::endl << std::endl;
-
-    std::cout << "b_vertical_left: " << b_vertical_left << std::endl;
-    std::cout << "b_vertical_right: " << b_vertical_right << std::endl << std::endl;
-
-    std::cout << "max_b_horizontal: " << max_b_horizontal << std::endl;
-    std::cout << "min_b_horizontal: " << min_b_horizontal << std::endl;
-    std::cout << "max_b_vertical: " << max_b_vertical << std::endl;
-    std::cout << "min_b_vertical: " << min_b_vertical << std::endl << std::endl;
-
-    std::cout << "left_side_x: " << left_side_x << std::endl;
-    std::cout << "right_side_x: " << right_side_x << std::endl;
-    std::cout << "up_side_y: " << up_side_y << std::endl;
-    std::cout << "down_side_y: " << down_side_y << std::endl;
-
-    double beginning_x = left_side_x;
-    double beginning_y = down_side_y;
-    if (addition_factors.first < 0) {
-        beginning_x = left_side_x;
-    }
-    if (addition_factors.second < 0) {
-        beginning_y = up_side_y;
-    }
-
-    for (double current_y = beginning_y; current_y <= up_side_y && current_y >= down_side_y; 
-        current_y += addition_factors.second) {
-        for (double current_x = beginning_x; current_x <= right_side_x && current_x >= left_side_x; 
-            current_x += addition_factors.first) {
+        while ((addition_factors.first > 0 && current_x <= end_x) ||
+            (addition_factors.first < 0 && current_x >= end_x)) {
             double b_horizontal = current_y - a_perpendicular * current_x;
             double b_vertical = current_y - a_mover_path * current_x;
-            if (min_b_horizontal <= b_horizontal && b_horizontal <= max_b_horizontal && 
-                min_b_vertical <= b_vertical && b_vertical <= max_b_vertical && isPointInLawn(current_x, current_y)) {
+
+            if (min_b_horizontal <= b_horizontal && b_horizontal <= max_b_horizontal &&
+                min_b_vertical <= b_vertical && b_vertical <= max_b_vertical &&
+                isPointInLawn(current_x, current_y)) {
+
                 pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(current_x, current_y);
                 cutGrassOnField(indexes); 
             }
-            counter ++;
+            current_x += addition_factors.first;
         }
+        current_y += addition_factors.second;
     }
-    cout << "Licznik: " << counter << endl;
 }
 
 
