@@ -601,7 +601,7 @@ TEST(cutGrassSection, cutTitledAreaAllInsideAngle225) {
     unsigned int lawn_length = 1000;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    pair<double, double> blade_middle (750, 250);
+    pair<double, double> blade_middle (750, 750);
     pair<double, double> ending_point (250, 250);
     unsigned short angle = 225;
     unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
