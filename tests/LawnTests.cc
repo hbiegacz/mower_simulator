@@ -575,3 +575,118 @@ TEST(CutGrass, cutGrassMaxLawnLeftUpCorner) {
     EXPECT_LT(shaved_area, max_area);
     EXPECT_GT(shaved_area, min_area);
 }
+
+
+TEST(cutGrassSection, cutTitledAreaAllInside) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (250, 250);
+    pair<double, double> ending_point (750, 750);
+    unsigned short angle = 45;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500 * sqrt(2);
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+
+TEST(cutGrassSection, cutTitledAreaAllInsideAngle225) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (750, 250);
+    pair<double, double> ending_point (250, 250);
+    unsigned short angle = 225;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500 * sqrt(2);
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+
+TEST(cutGrassSection, cutNormalAreaAllInside) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (250, 250);
+    pair<double, double> ending_point (250, 750);
+    unsigned short angle = 0;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500;
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+
+TEST(cutGrassSection, cutNormalAreaAllInside2) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (250, 250);
+    pair<double, double> ending_point (750, 250);
+    unsigned short angle = 90;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500;
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+TEST(cutGrassSection, cutNormalAreaAllInside3) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (250, 750);
+    pair<double, double> ending_point (250, 250);
+    unsigned short angle = 180;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500;
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+
+TEST(cutGrassSection, cutNormalAreaAllInside4) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (750, 250);
+    pair<double, double> ending_point (250, 250);
+    unsigned short angle = 270;
+    unsigned int blade_diameter = Config::MIN_BLADE_DIAMETER;;
+
+    lawn.cutGrassSection(blade_middle, blade_diameter, ending_point, angle);
+    unsigned int lawn_area = lawn_width * lawn_length;
+    double shaved_area = lawn.calculateShavedArea() * static_cast<double>(lawn_area);
+    double estimated_shaved_area = Constants::PI * blade_diameter * blade_diameter / 4 + blade_diameter * 500;
+    
+    EXPECT_NEAR(shaved_area, estimated_shaved_area, 0.1 * estimated_shaved_area);
+}
+
+
