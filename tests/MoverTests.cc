@@ -118,7 +118,7 @@ TEST(OperatorEquals, notEqualsX) {
     Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
     Mover mover = Mover(width, length, blade_diameter, speed);
     mover.setX(mover.getX() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
 
     bool result = mover == mover2;
     EXPECT_FALSE(result);
@@ -133,7 +133,7 @@ TEST(OperatorEquals, notEqualsY) {
     Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
     Mover mover = Mover(width, length, blade_diameter, speed);
     mover.setY(mover.getY() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
 
     bool result = mover == mover2;
     EXPECT_FALSE(result);
@@ -148,8 +148,23 @@ TEST(OperatorEquals, notEqualsAngle) {
     Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
     Mover mover = Mover(width, length, blade_diameter, speed);
     mover.setAngle(mover.getAngle() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
 
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsIsMowing) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    mover.turnOffMowing();
+    
     bool result = mover == mover2;
     EXPECT_FALSE(result);
 }
