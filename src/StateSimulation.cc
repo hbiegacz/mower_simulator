@@ -9,6 +9,7 @@
 #include <iostream>
 #include "../include/Constants.h"
 #include "../include/StateSimulation.h"
+#include "../include/Point.h"
 #include "../include/Lawn.h"
 #include "../include/Logger.h"
 #include "../include/MathHelper.h"
@@ -18,7 +19,7 @@ using namespace std;
 
 
 StateSimulation::StateSimulation(Lawn& lawn, Mover& mover, Logger& logger) : lawn_(lawn),
-    mover_(mover), logger_(logger), time_(0) {}
+    mover_(mover), logger_(logger), time_(0), points_(vector<Point>()), next_point_id_(0) {}
 
 
 bool StateSimulation::operator==(const StateSimulation& other) const{
@@ -50,6 +51,16 @@ const Logger& StateSimulation::getLogger() const {
 
 const u_int64_t& StateSimulation::getTime() const {
     return time_;
+}
+
+
+const vector<Point>& StateSimulation::getPoints() const {
+    return points_;
+}
+
+
+const unsigned int& StateSimulation::getNextPointId() const {
+    return next_point_id_;
 }
 
 
@@ -160,4 +171,105 @@ void StateSimulation::simulateMowingOptionOn() {
 
 void StateSimulation::simulateMowingOptionOff() {
     mover_.turnOffMowing();
+}
+
+
+void StateSimulation::simulateAddPoint(const double& x, const double& y) {
+    if(lawn_.isPointInLawn(x, y)) {
+        points_.push_back(Point(x, y, next_point_id_));
+        next_point_id_ ++;
+    }
+    else {
+        logger_.push(Log(time_, "Unable to add point outside the lawn."));
+    }
+}
+
+void StateSimulation::simulateDeletePoint(const unsigned int& id) {
+    bool is_found = false;
+    for (auto iterator = points_.begin(); iterator != points_.end(); ) {
+        if (iterator->getId() == id) {
+            iterator = points_.erase(iterator);
+            is_found = true;
+        } 
+        else {
+            ++iterator;
+        }
+    }
+    if (!is_found) {
+        logger_.push(Log(time_, "Unable to delete point from lawn. Incorrect point's id."));
+    }
+}
+
+
+void StateSimulation::simulateMovementToPoint(const unsigned int& id) {
+    bool is_found = false;
+    double x;
+    double y;
+    for (const Point& point : points_) {
+        if (point.getId() == id) {
+            x = point.getX();
+            y = point.getY();
+            is_found = true;
+            break;
+        }
+    }
+    if (!is_found) {
+        logger_.push(Log(time_, "Unable to delete point from lawn. Incorrect point's id."));
+        return;
+    }
+
+    while (abs(x - mover_.getX()) > Constants::DISTANCE_PRECISION || 
+        abs(y - mover_.getY()) > Constants::DISTANCE_PRECISION) {
+        moveToPointAttempt(x, y);
+    }
+}
+
+
+void StateSimulation::moveToPointAttempt(const double& x, const double& y) {
+    pair<short, double> rotation_distance = calculateAngleAndDistance(x, y);
+
+    simulateRotation(rotation_distance.first);
+    simulateMovement(rotation_distance.second);
+}
+
+
+pair<short, double> StateSimulation::calculateAngleAndDistance(const double& x, const double& y) const {
+    double dx = x - mover_.getX();
+    double dy = y - mover_.getY();
+    short rotation;
+    double distance;
+
+    if (dx == 0) {
+        rotation = calculateRotationNoDx(dy);
+        distance = abs(dy);
+    }   
+    else {
+        rotation = calculateRotationDx(dy, dx);
+        distance = std::sqrt(dx*dx + dy*dy);
+    }
+    return pair<short, double>(rotation, distance);
+}
+
+
+double StateSimulation::calculateRotationNoDx(const double& dy) const {
+    double rotation;
+
+    if (dy > 0) {
+        rotation = -mover_.getAngle();
+    }
+    else {
+        rotation = 180 - mover_.getAngle();
+    }
+    return rotation;
+}
+
+
+double StateSimulation::calculateRotationDx(const double& dy, const double& dx) const {
+    double target_angle_in_radians = atan2(dy, dx);
+    double target_angle_degrees = MathHelper::convertRadiansToDegrees(target_angle_in_radians);
+
+    short SQUARE_ANGLE = 90;
+    short rotation = SQUARE_ANGLE - short(target_angle_degrees) - mover_.getAngle();
+
+    return rotation;
 }
