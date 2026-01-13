@@ -1,7 +1,11 @@
 #include <gtest/gtest.h>
 #include <QApplication>
 #include "simulation/LawnSimulationView.h"
+#include "StateSimulation.h"
 #include "Lawn.h"
+#include "Mover.h"
+#include "Logger.h"
+#include "FileLogger.h"
 #include <mutex>
 #include <thread>
 #include <chrono>
@@ -22,20 +26,35 @@ protected:
     }
     
     void SetUp() override {
+        // Create dependencies
         lawn_ = new Lawn(100, 80);
-        lawn_mutex_ = new mutex();
-        view_ = new LawnSimulationView(lawn_, *lawn_mutex_);
+        mover_ = new Mover(30, 40, 15, 20);
+        logger_ = new Logger();
+        fileLogger_ = new FileLogger("test_view.log");
+        
+        simulation_ = new StateSimulation(*lawn_, *mover_, *logger_, *fileLogger_);
+        simulation_mutex_ = new mutex();
+        
+        view_ = new LawnSimulationView(*simulation_, *simulation_mutex_);
     }
     
     void TearDown() override {
         delete view_;
-        delete lawn_mutex_;
+        delete simulation_mutex_;
+        delete simulation_;
+        delete fileLogger_;
+        delete logger_;
+        delete mover_;
         delete lawn_;
     }
     
     static QApplication* app_;
     Lawn* lawn_;
-    mutex* lawn_mutex_;
+    Mover* mover_;
+    Logger* logger_;
+    FileLogger* fileLogger_;
+    StateSimulation* simulation_;
+    mutex* simulation_mutex_;
     LawnSimulationView* view_;
 };
 
@@ -43,12 +62,6 @@ QApplication* LawnSimulationViewTests::app_ = nullptr;
 
 TEST_F(LawnSimulationViewTests, ConstructorCreatesValidWidget) {
     EXPECT_NE(nullptr, view_);
-}
-
-TEST_F(LawnSimulationViewTests, ConstructorThrowsOnNullLawn) {
-    EXPECT_THROW({
-        LawnSimulationView invalid_view(nullptr, *lawn_mutex_);
-    }, invalid_argument);
 }
 
 TEST_F(LawnSimulationViewTests, DefaultWindowSize) {
@@ -71,60 +84,8 @@ TEST_F(LawnSimulationViewTests, MinimumWindowSize) {
     EXPECT_EQ(EXPECTED_MIN_HEIGHT, min_hint.height());
 }
 
-TEST_F(LawnSimulationViewTests, StartSimulationWithValidFPS) {
-    constexpr int TEST_FPS = 30;
-    
-    EXPECT_NO_THROW(view_->startSimulation(TEST_FPS));
-    
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, StartSimulationWithDefaultFPS) {
-    EXPECT_NO_THROW(view_->startSimulation());
-    
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, StopSimulationWithoutStart) {
-    EXPECT_NO_THROW(view_->stopSimulation());
-}
-
-TEST_F(LawnSimulationViewTests, StartSimulationTwice) {
-    view_->startSimulation(30);
-    
-    EXPECT_NO_THROW(view_->startSimulation(60));
-    
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, StartStopMultipleTimes) {
-    view_->startSimulation(30);
-    view_->stopSimulation();
-    
-    view_->startSimulation(60);
-    view_->stopSimulation();
-    
-    EXPECT_NO_THROW(view_->startSimulation(45));
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, RefreshDoesNotCrash) {
-    EXPECT_NO_THROW(view_->refresh());
-}
-
-TEST_F(LawnSimulationViewTests, RefreshWithRunningSimulation) {
-    view_->startSimulation(30);
-    
-    EXPECT_NO_THROW(view_->refresh());
-    
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, InvalidFPSIsHandledGracefully) {
-    EXPECT_NO_THROW(view_->startSimulation(0));
-    EXPECT_NO_THROW(view_->startSimulation(-10));
-    
-    view_->stopSimulation();
+TEST_F(LawnSimulationViewTests, TriggerRepaintDoesNotCrash) {
+    EXPECT_NO_THROW(view_->triggerRepaint());
 }
 
 TEST_F(LawnSimulationViewTests, WidgetCanBeShownAndHidden) {
@@ -133,27 +94,4 @@ TEST_F(LawnSimulationViewTests, WidgetCanBeShownAndHidden) {
     
     EXPECT_NO_THROW(view_->hide());
     EXPECT_FALSE(view_->isVisible());
-}
-
-TEST_F(LawnSimulationViewTests, ThreadSafeAccessToLawn) {
-    view_->startSimulation(30);
-    
-    thread modifier([this]() {
-        lock_guard<mutex> lock(*lawn_mutex_);
-        lawn_->cutGrassOnField({5, 5});
-    });
-    
-    this_thread::sleep_for(chrono::milliseconds(50));
-    
-    EXPECT_NO_THROW(view_->refresh());
-    
-    modifier.join();
-    view_->stopSimulation();
-}
-
-TEST_F(LawnSimulationViewTests, DestructorCleansUpProperly) {
-    LawnSimulationView* temp_view = new LawnSimulationView(lawn_, *lawn_mutex_);
-    temp_view->startSimulation(30);
-    
-    EXPECT_NO_THROW(delete temp_view);
 }
