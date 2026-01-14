@@ -122,24 +122,39 @@ void Visualizer::drawLawnGrid(QPainter& painter) {
     }
 }
 
+void Visualizer::calculateMowerDrawSize(const Mover& mover, double& out_w_px, double& out_h_px) const {
+    double physical_width = mover.getWidth();
+    double physical_length = mover.getLength();
+    double blade_diameter = mover.getBladeDiameter();
+
+    double display_width_cm = std::max(physical_width, blade_diameter);
+    
+    double scale_ratio = display_width_cm / physical_width;
+    double display_length_cm = physical_length * scale_ratio;
+
+    out_w_px = display_width_cm * scale_factor_;
+    out_h_px = display_length_cm * scale_factor_;
+}
+
 void Visualizer::drawMower(QPainter& painter) {
     const Mover& mover = simulation_.getMover();
     double x = mover.getX();
     double y = mover.getY();
+
     double orientation = mover.getAngle();
-    double width_cm = mover.getWidth();
-    double length_cm = mover.getLength();
+    double mower_w_px, mower_h_px;
+    calculateMowerDrawSize(mover, mower_w_px, mower_h_px);
     
     painter.save();
     
     QPointF center_pos = worldToScreen(x, y);
     painter.translate(center_pos);
-    painter.rotate(-orientation);
     
-    double mower_w_px = width_cm * scale_factor_;
-    double mower_h_px = length_cm * scale_factor_;
+    painter.rotate(MathHelper::convertRadiansToDegrees(-orientation));  //TODO: test this
     
-    painter.drawPixmap(QRectF(-mower_w_px / 2.0, -mower_h_px / 2.0, mower_w_px, mower_h_px), mower_image_, mower_image_.rect());
+    QRectF target_rect(-mower_w_px / 2.0, -mower_h_px / 2.0, mower_w_px, mower_h_px);
+    
+    painter.drawPixmap(target_rect, mower_image_, mower_image_.rect());
     
     painter.restore();
 }

@@ -11,6 +11,7 @@
 #include <mutex>
 
 class StateSimulation;
+class Mover;
 
 class Visualizer : public QWidget {
     Q_OBJECT
@@ -51,6 +52,7 @@ private:
     QPointF worldToScreen(double x_cm, double y_cm);
     void drawLawnGrid(QPainter& painter);
     void drawMower(QPainter& painter);
-
+    void drawPoints(QPainter& painter);
+    void calculateMowerDrawSize(const Mover& mover, double& out_w_px, double& out_h_px) const;
 
 };
