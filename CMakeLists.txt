@@ -23,6 +23,7 @@ add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
 add_executable(mower_simulator src/Main.cc src/Config.cc src/Mover.cc src/Lawn.cc src/Exceptions.cc src/Visualizer.cc include/Visualizer.h src/Engine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc src/Point.cc src/FileLogger.cc)
+add_definitions(-DASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/include/assets")
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
 
 # Tests
