@@ -41,6 +41,7 @@ private:
 
     static const QColor UNMOWED_GRASS_COLOR;
     static const QColor MOWED_GRASS_COLOR;
+    std::vector<QPixmap> point_pixmaps_;
     
     static constexpr int DEFAULT_WINDOW_WIDTH = 1000;
     static constexpr int DEFAULT_WINDOW_HEIGHT = 800;

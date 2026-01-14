@@ -7,6 +7,7 @@
 #include "StateSimulation.h"
 #include "Lawn.h"
 #include "Mover.h"
+#include "MathHelper.h"
 #include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
@@ -18,6 +19,7 @@
 #include <QMetaObject>
 
 using namespace std;
+
 
 const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);  
 const QColor Visualizer::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
@@ -46,8 +48,24 @@ QSize Visualizer::minimumSizeHint() const {
 }
 
 void Visualizer::loadAssets() {
-    if (!mower_image_.load("include/assets/mower_3.png")) {
-        cerr << "Failed to load mower image from include/assets/mower_3.png" << endl;
+    string assets_path = string(ASSETS_PATH);
+    string mower_path = assets_path + "/mower.png";
+    if (!mower_image_.load(mower_path.c_str())) {
+        cerr << "[Visualizer] Failed to load mower image from file: " << mower_path << endl;
+    }
+
+    vector<string> point_colors = {
+        "blue", "green", "navy", "orange", "pink", "purple", "yellow"
+    };
+
+    for (const string& color : point_colors) {
+        string path = assets_path + "/point_" + color + ".png";
+        QPixmap pixmap;
+        if (pixmap.load(path.c_str())) {
+            point_pixmaps_.push_back(pixmap);
+        } else {
+            cerr << "[Visualizer] Failed to load point image: " << path << endl;
+        }
     }
 }
 
@@ -89,6 +107,7 @@ void Visualizer::paintEvent(QPaintEvent* event) {
     lock_guard<mutex> lock(simulation_mutex_);
     
     drawLawnGrid(painter);
+    drawPoints(painter);
     drawMower(painter);
 }
 
@@ -141,12 +160,12 @@ void Visualizer::drawMower(QPainter& painter) {
     double x = mover.getX();
     double y = mover.getY();
 
-    double orientation = mover.getAngle();
+    double orientation = mover.getAngle(); 
     double mower_w_px, mower_h_px;
     calculateMowerDrawSize(mover, mower_w_px, mower_h_px);
     
     painter.save();
-    
+
     QPointF center_pos = worldToScreen(x, y);
     painter.translate(center_pos);
     
@@ -157,4 +176,27 @@ void Visualizer::drawMower(QPainter& painter) {
     painter.drawPixmap(target_rect, mower_image_, mower_image_.rect());
     
     painter.restore();
+}
+
+void Visualizer::drawPoints(QPainter& painter) {
+    double MIN_ICON_HEIGHT = 30.0;
+    double ICON_PROPORTION = 0.05;
+    const auto& points = simulation_.getPoints();
+    double icon_height = height() * ICON_PROPORTION;
+    
+    if (icon_height < MIN_ICON_HEIGHT) icon_height = MIN_ICON_HEIGHT;
+
+    for (size_t i = 0; i < points.size() && i < point_pixmaps_.size(); ++i) {
+        const auto& point = points[i];
+        const auto& pixmap = point_pixmaps_[i];
+        
+        QPointF screen_pos = worldToScreen(point.getX(), point.getY());
+        
+        double aspect_ratio = static_cast<double>(pixmap.width()) / (pixmap.height() > 0 ? pixmap.height() : 1);
+        double icon_width = icon_height * aspect_ratio;
+        
+        QRectF target_rect(screen_pos.x() - icon_width / 2.0, screen_pos.y() - icon_height, icon_width, icon_height);
+        
+        painter.drawPixmap(target_rect, pixmap, pixmap.rect());
+    }
 }
