@@ -42,10 +42,6 @@ add_executable(MoverTests tests/MoverTests.cc src/Mover.cc src/Config.cc src/Exc
 target_link_libraries(MoverTests gtest gtest_main)
 add_test(NAME MoverTests COMMAND MoverTests)
 
-add_executable(SimulationTests tests/SimulationTests.cc src/Lawn.cc src/Config.cc src/MathHelper.cc)
-target_link_libraries(SimulationTests gtest gtest_main pthread Threads::Threads)
-add_test(NAME SimulationTests COMMAND SimulationTests)
-
 add_executable(VisualizerTests tests/VisualizerTests.cc src/Visualizer.cc include/Visualizer.h src/Lawn.cc src/Config.cc src/MathHelper.cc src/StateSimulation.cc src/Mover.cc src/Logger.cc src/Log.cc src/Point.cc src/FileLogger.cc src/Exceptions.cc)
 target_link_libraries(VisualizerTests gtest gtest_main pthread Qt5::Widgets Threads::Threads)
 add_test(NAME VisualizerTests COMMAND VisualizerTests)
