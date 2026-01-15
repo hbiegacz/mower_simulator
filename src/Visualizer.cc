@@ -2,7 +2,6 @@
     Author: Hanna Biegacz
     
     Visualizer implementation. 
-    TODO: update description
 */
 #include "Visualizer.h"
 #include "StateSimulation.h"
@@ -27,14 +26,14 @@ const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(75, 187, 103);
 const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
 Visualizer::Visualizer(Engine& engine, QWidget* parent)
-    : QWidget(parent), engine_(engine), scale_factor_(1.0) {
-    // TODO: REMOVE MAGIC NUMBER
+    : QWidget(parent), engine_(engine) {
     current_snapshot_ = engine_.getRenderContext().getInterpolatedState(0);
 
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-    loadImages();
+    loadMowerImage();
+    loadPointImages();
 }
 
 Visualizer::~Visualizer() {
@@ -49,13 +48,16 @@ QSize Visualizer::minimumSizeHint() const {
     return QSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 }
 
-void Visualizer::loadImages() {
+void Visualizer::loadMowerImage() {
     string assets_path = string(ASSETS_PATH);
     string mower_path = assets_path + "/mower.png";
     if (!mower_image_.load(mower_path.c_str())) {
         cerr << "[Visualizer] Failed to load mower image from file: " << mower_path << endl;
     }
+}
 
+void Visualizer::loadPointImages() {
+    string assets_path = string(ASSETS_PATH);
     vector<string> point_colors = {
         "blue", "green", "navy", "orange", "pink", "purple", "yellow"
     };
@@ -75,7 +77,7 @@ void Visualizer::updateLayout() {
     double lawn_width_cm = current_snapshot_.lawn_width_;
     lawn_length_cm_ = current_snapshot_.lawn_length_;
     
-    if (lawn_width_cm <= 0 || lawn_length_cm_ <= 0) return;
+    if (!hasValidLawnDimensions()) return; //TODO: DO WE NEED TO CHECK IT HERE?
 
     scale_factor_ = min(static_cast<double>(width()) / lawn_width_cm, 
                         static_cast<double>(height()) / lawn_length_cm_);
@@ -99,41 +101,66 @@ QPointF Visualizer::mapToScreen(double x_cm, double y_cm) {
 }
 
 void Visualizer::paintEvent(QPaintEvent* event) {
-    // TODO: REMOVE MAGIC NUMBERS
-    // TODO: SPLIT INTO SMALLER FUNCTIONS
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    setupPainter(painter);
     
-    if (!frame_timer_.isValid()) {
-        frame_timer_.start();
-        smoothed_render_time_ = current_snapshot_.simulation_time_;
-    }
-
-    double dt_ms = static_cast<double>(frame_timer_.restart());
-    double simulation_dt = dt_ms * engine_.getSpeedMultiplier();
-
-    double actual_sim_time = engine_.getSimulationTime();
-    
-    if (std::abs(actual_sim_time - smoothed_render_time_) > 500.0) {
-        smoothed_render_time_ = actual_sim_time;
-    } else {
-        smoothed_render_time_ += simulation_dt;
-    }
-
-    current_snapshot_ = engine_.getRenderContext().getInterpolatedState(smoothed_render_time_);
-    updateLayout();
+    updateSmoothedRenderTime();
+    refreshStateAndLayout();
 
     renderLawn(painter);
     renderPoints(painter);
     renderMower(painter, current_snapshot_);
 }
 
-void Visualizer::renderLawn(QPainter& painter) {
-    const auto& fields = current_snapshot_.fields_;
-    
-    if (fields.empty() || fields[0].empty()) return;
+void Visualizer::setupPainter(QPainter& painter) {
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+}
 
+void Visualizer::updateSmoothedRenderTime() {
+    if (!frame_timer_.isValid()) {
+        frame_timer_.start();
+        smoothed_render_time_ = current_snapshot_.simulation_time_;
+        return;
+    }
+
+    double dt_ms = static_cast<double>(frame_timer_.restart());
+    double simulation_dt = dt_ms * engine_.getSpeedMultiplier();
+    double actual_sim_time = engine_.getSimulationTime();
+    
+    if (hasSignificantTimeDrift(actual_sim_time)) {
+        smoothed_render_time_ = actual_sim_time;
+    } else {
+        smoothed_render_time_ += simulation_dt;
+    }
+}
+
+bool Visualizer::hasSignificantTimeDrift(double actual_sim_time) const {
+    const int MAX_DRIFT_MS = 500;
+    return std::abs(actual_sim_time - smoothed_render_time_) > MAX_DRIFT_MS;
+}
+
+
+void Visualizer::refreshStateAndLayout() {
+    current_snapshot_ = engine_.getRenderContext().getInterpolatedState(smoothed_render_time_);
+    updateLayout();
+}
+
+bool Visualizer::hasValidLawnDimensions() const {
+    return current_snapshot_.lawn_width_ > 0 && current_snapshot_.lawn_length_ > 0;
+}
+
+bool Visualizer::isLawnDataEmpty() const {
+    const auto& fields = current_snapshot_.fields_;
+    return fields.empty() || fields[0].empty();
+}
+
+
+
+void Visualizer::renderLawn(QPainter& painter) {
+    if (isLawnDataEmpty()) return;
+
+    const auto& fields = current_snapshot_.fields_;
     const unsigned int num_rows = fields.size();
     const unsigned int num_cols = fields[0].size();
     
@@ -172,30 +199,26 @@ void Visualizer::calculateMowerRenderSize(double mover_width, double mover_lengt
 void Visualizer::renderMower(QPainter& painter, const Snapshot& snapshot) {
     double mower_w_px, mower_h_px;
     calculateMowerRenderSize(snapshot.mower_width_, snapshot.mower_length_, snapshot.blade_diameter_, mower_w_px, mower_h_px);
-    //TODO: CHANGE TO mowerRENDERsize
-    
     painter.save();
 
     QPointF center_pos = mapToScreen(snapshot.x_, snapshot.y_);
     painter.translate(center_pos);
-    
     painter.rotate(MathHelper::convertRadiansToDegrees(-snapshot.angle_));
     
     QRectF target_rect(-mower_w_px / 2.0, -mower_h_px / 2.0, mower_w_px, mower_h_px);
     
     painter.drawPixmap(target_rect, mower_image_, mower_image_.rect());
-    
     painter.restore();
 }
 
 void Visualizer::renderPoints(QPainter& painter) {
-    double MIN_ICON_HEIGHT = 30.0;
-    double ICON_PROPORTION = 0.05;
+    double MIN_POINT_HEIGHT = 30.0;
+    double POINT_PROPORTION = 0.05;
     const auto& points = current_snapshot_.points_;
 
-    double icon_height = height() * ICON_PROPORTION;
+    double point_height = height() * POINT_PROPORTION;
     
-    if (icon_height < MIN_ICON_HEIGHT) icon_height = MIN_ICON_HEIGHT;
+    if (point_height < MIN_POINT_HEIGHT) point_height = MIN_POINT_HEIGHT;
 
     for (size_t i = 0; i < points.size() && i < point_pixmaps_.size(); ++i) {
         const auto& point = points[i];
@@ -204,9 +227,9 @@ void Visualizer::renderPoints(QPainter& painter) {
         QPointF screen_pos = mapToScreen(point.getX(), point.getY());
         
         double aspect_ratio = static_cast<double>(pixmap.width()) / (pixmap.height() > 0 ? pixmap.height() : 1);
-        double icon_width = icon_height * aspect_ratio;
+        double point_width = point_height * aspect_ratio;
         
-        QRectF target_rect(screen_pos.x() - icon_width / 2.0, screen_pos.y() - icon_height, icon_width, icon_height);
+        QRectF target_rect(screen_pos.x() - point_width / 2.0, screen_pos.y() - point_height, point_width, point_height);
         
         painter.drawPixmap(target_rect, pixmap, pixmap.rect());
     }

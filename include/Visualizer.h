@@ -35,10 +35,12 @@ protected:
     void resizeEvent(QResizeEvent* event) override;
 
 private:
+    // TODO: SORT 
+    // TODO: DELEGATE TASKS TO ANOTHER CLASS?
     Engine& engine_;
     Snapshot current_snapshot_;
     QPixmap mower_image_;
-    double scale_factor_;
+    double scale_factor_= 1.0;
     QPointF map_offset_;
     double lawn_length_cm_ = 0;
 
@@ -52,10 +54,17 @@ private:
     
     static constexpr int DEFAULT_WINDOW_WIDTH = 1000;
     static constexpr int DEFAULT_WINDOW_HEIGHT = 800;
-    static constexpr int MIN_WINDOW_WIDTH = 800;
+    static constexpr int MIN_WINDOW_WIDTH = 800;            //TODO: DO WE NEED THIS?
     static constexpr int MIN_WINDOW_HEIGHT = 600;
     
-    void loadImages();
+    void setupPainter(QPainter& painter);
+    void updateSmoothedRenderTime();
+    bool hasSignificantTimeDrift(double actual_sim_time) const;
+    void refreshStateAndLayout();
+    bool hasValidLawnDimensions() const;
+    bool isLawnDataEmpty() const;
+    void loadMowerImage();
+    void loadPointImages();
     void updateLayout();
     QPointF mapToScreen(double x_cm, double y_cm);
     void renderLawn(QPainter& painter);
