@@ -21,8 +21,8 @@
 using namespace std;
 
 
-const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);  
-const QColor Visualizer::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
+const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(75, 187, 103);  
+const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
 Visualizer::Visualizer(StateSimulation& simulation, mutex& simulation_mutex, QWidget* parent)
     : QWidget(parent), simulation_(simulation), simulation_mutex_(simulation_mutex), scale_factor_(1.0) {
