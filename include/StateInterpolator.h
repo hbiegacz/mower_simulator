@@ -16,11 +16,9 @@ public:
 
     SimulationSnapshot getInterpolatedState( double render_time ) const;
 
-    void setSimulationMetadata( double time, double speed );
-
     double getSimulationTime() const;
     double getSpeedMultiplier() const;
-
+    void setSimulationSpeedMultiplier(double speed_multiplier);
 private:
     bool isSnapshotOutdatedOrDuplicate( const SimulationSnapshot& snapshot ) const;
 
@@ -44,6 +42,5 @@ private:
     static const size_t MAX_BUFFER_SIZE = 50;
     
     mutable std::mutex mutex_;
-    std::atomic<double> latest_sim_time_{0.0};
     std::atomic<double> current_speed_multiplier_{1.0};
 };

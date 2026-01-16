@@ -3,20 +3,18 @@
     
     Visualizer implementation. 
 */
+#include <QPainter>
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QCoreApplication>
+#include <QMetaObject>
+#include <iostream>
 #include "Visualizer.h"
 #include "StateSimulation.h"
 #include "Lawn.h"
 #include "Mower.h"
 #include "MathHelper.h"
-#include <QPainter>
-#include <QPaintEvent>
-#include <QResizeEvent>
-#include <QCoreApplication>
-#include <iostream>
-#include <mutex>
-#include <cmath>
-#include <algorithm>
-#include <QMetaObject>
+
 
 using namespace std;
 
@@ -109,6 +107,7 @@ void Visualizer::paintEvent(QPaintEvent* event) {
     renderLawn(painter);
     renderPoints(painter);
     renderMower(painter, current_sim_snapshot_);
+    update(); 
 }
 
 void Visualizer::setupPainter(QPainter& painter) {
@@ -117,32 +116,53 @@ void Visualizer::setupPainter(QPainter& painter) {
 }
 
 void Visualizer::updateSmoothedRenderTime() {
-    const double RENDER_DELAY_MS = 100.0;
-    double actual_sim_time = state_interpolator_.getSimulationTime();
+    double current_sim_time = state_interpolator_.getSimulationTime();
+    double current_speed = state_interpolator_.getSpeedMultiplier();
 
     if (!frame_timer_.isValid()) {
         frame_timer_.start();
-        smoothed_render_time_ = std::max(0.0, actual_sim_time - RENDER_DELAY_MS);
+        smoothed_render_time_ = calculateIdealRenderTime(current_sim_time, current_speed);
         return;
     }
 
     double dt_ms = static_cast<double>(frame_timer_.restart());
-    double simulation_dt = dt_ms * state_interpolator_.getSpeedMultiplier();
-    
-    double target_render_time = actual_sim_time - RENDER_DELAY_MS;
-    
-    if (hasSignificantTimeDrift(target_render_time)) {
-        smoothed_render_time_ = target_render_time;
+
+    advanceRenderTime(dt_ms, current_speed);
+    syncWithSimulationClock(current_sim_time, current_speed);
+}
+double Visualizer::calculateIdealRenderTime(double actual_sim_time, double speed_multiplier) const {
+    double dynamic_delay = BASE_BUFFER_DELAY_MS * std::max(1.0, speed_multiplier);
+    return std::max(0.0, actual_sim_time - dynamic_delay);
+}
+
+void Visualizer::advanceRenderTime(double dt_ms, double speed_multiplier) {
+    smoothed_render_time_ += (dt_ms * speed_multiplier);
+}
+
+void Visualizer::syncWithSimulationClock(double actual_sim_time, double speed_multiplier) {
+    double ideal_time = calculateIdealRenderTime(actual_sim_time, speed_multiplier);
+    double time_drift = std::abs(ideal_time - smoothed_render_time_);
+    double max_allowed_drift = MAX_TIME_DRIFT_MS * std::max(1.0, speed_multiplier);
+
+    if (time_drift > max_allowed_drift) {
+        performHardTimeReset(ideal_time);
     } else {
-        smoothed_render_time_ += simulation_dt;
+        applySoftTimeCorrection(ideal_time);
+    }
+
+    if (smoothed_render_time_ > actual_sim_time) {
+        smoothed_render_time_ = actual_sim_time;
     }
 }
 
-bool Visualizer::hasSignificantTimeDrift(double target_render_time) const {
-    const int MAX_DRIFT_MS = 500;
-    return std::abs(target_render_time - smoothed_render_time_) > MAX_DRIFT_MS;
+void Visualizer::applySoftTimeCorrection(double ideal_time) {
+    double correction = (ideal_time - smoothed_render_time_) * DRIFT_CORRECTION_FACTOR;
+    smoothed_render_time_ += correction;
 }
 
+void Visualizer::performHardTimeReset(double ideal_time) {
+    smoothed_render_time_ = ideal_time;
+}
 
 void Visualizer::refreshStateAndLayout() {
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(smoothed_render_time_);

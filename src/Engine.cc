@@ -60,7 +60,7 @@ void Engine::setSimulationSpeed(double multiplier) {
     if (multiplier > 0) {
         speed_multiplier_ = multiplier;
     }
-    state_interpolator_.setSimulationMetadata(getSimulationTime(), multiplier);
+    state_interpolator_.setSimulationSpeedMultiplier(multiplier);
 }
 
 double Engine::getSpeedMultiplier() const {
@@ -117,5 +117,5 @@ void Engine::updateSimulation(double dt) {
     }
     }
     state_interpolator_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
-    state_interpolator_.setSimulationMetadata(getSimulationTime(), speed_multiplier_.load());
+    state_interpolator_.setSimulationSpeedMultiplier(speed_multiplier_.load());
 }

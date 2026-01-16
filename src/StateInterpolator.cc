@@ -42,14 +42,17 @@ SimulationSnapshot StateInterpolator::getInterpolatedState( double render_time )
 }
 
 
-void StateInterpolator::setSimulationMetadata( double time, double speed ){
-    latest_sim_time_.store( time );
+void StateInterpolator::setSimulationSpeedMultiplier( double speed ){
     current_speed_multiplier_.store( speed );
 }
 
 
 double StateInterpolator::getSimulationTime() const {
-    return latest_sim_time_.load();
+    lock_guard<mutex> lock( mutex_ );
+    if( sim_snapshot_buffer_.empty() ){
+        return 0.0;
+    }
+    return sim_snapshot_buffer_.back().simulation_time_;
 }
 
 
