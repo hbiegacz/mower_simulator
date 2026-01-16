@@ -60,7 +60,7 @@ void Engine::setSimulationSpeed(double multiplier) {
     if (multiplier > 0) {
         speed_multiplier_ = multiplier;
     }
-    render_context_.setSimulationMetadata(getSimulationTime(), multiplier);
+    state_interpolator_.setSimulationMetadata(getSimulationTime(), multiplier);
 }
 
 double Engine::getSpeedMultiplier() const {
@@ -80,8 +80,8 @@ double Engine::getSimulationTime() const {
     return static_cast<double>(simulation_.getTime());
 }
 
-RenderContext& Engine::getRenderContext() {
-    return render_context_;
+StateInterpolator& Engine::getStateInterpolator() {
+    return state_interpolator_;
 }
 
 void Engine::runSimulation() {
@@ -110,12 +110,12 @@ void Engine::runSimulation() {
 }
 
 void Engine::updateSimulation(double dt) {
-    // {
+    {
     std::lock_guard<std::mutex> lock(state_mutex_);
     if (user_simulation_callback_) {
         user_simulation_callback_(simulation_, dt);
     }
-// }
-    render_context_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
-    render_context_.setSimulationMetadata(getSimulationTime(), speed_multiplier_.load()); //TODO: better to do that at once in addSimulationSnapshot
+    }
+    state_interpolator_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
+    state_interpolator_.setSimulationMetadata(getSimulationTime(), speed_multiplier_.load());
 }

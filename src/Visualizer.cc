@@ -24,9 +24,9 @@ using namespace std;
 const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(75, 187, 103);  
 const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
-Visualizer::Visualizer(RenderContext& render_context, QWidget* parent)
-    : QWidget(parent), render_context_(render_context) {
-    current_sim_snapshot_ = render_context_.getInterpolatedState(0);
+Visualizer::Visualizer(StateInterpolator& render_context, QWidget* parent)
+    : QWidget(parent), state_interpolator_(render_context) {
+    current_sim_snapshot_ = state_interpolator_.getInterpolatedState(0);
 
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
@@ -118,7 +118,7 @@ void Visualizer::setupPainter(QPainter& painter) {
 
 void Visualizer::updateSmoothedRenderTime() {
     const double RENDER_DELAY_MS = 100.0;
-    double actual_sim_time = render_context_.getSimulationTime();
+    double actual_sim_time = state_interpolator_.getSimulationTime();
 
     if (!frame_timer_.isValid()) {
         frame_timer_.start();
@@ -127,7 +127,7 @@ void Visualizer::updateSmoothedRenderTime() {
     }
 
     double dt_ms = static_cast<double>(frame_timer_.restart());
-    double simulation_dt = dt_ms * render_context_.getSpeedMultiplier();
+    double simulation_dt = dt_ms * state_interpolator_.getSpeedMultiplier();
     
     double target_render_time = actual_sim_time - RENDER_DELAY_MS;
     
@@ -145,7 +145,7 @@ bool Visualizer::hasSignificantTimeDrift(double target_render_time) const {
 
 
 void Visualizer::refreshStateAndLayout() {
-    current_sim_snapshot_ = render_context_.getInterpolatedState(smoothed_render_time_);
+    current_sim_snapshot_ = state_interpolator_.getInterpolatedState(smoothed_render_time_);
     updateLayout();
 }
 

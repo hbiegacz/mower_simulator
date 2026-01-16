@@ -19,7 +19,7 @@ class Visualizer : public QWidget {
     Q_OBJECT
 
 public:
-    explicit Visualizer(RenderContext& render_context, QWidget* parent = nullptr);
+    explicit Visualizer(StateInterpolator& render_context, QWidget* parent = nullptr);
     ~Visualizer();
     
     Visualizer(const Visualizer&) = delete;
@@ -60,7 +60,7 @@ private:
     bool hasValidLawnDimensions() const;
     bool isLawnDataEmpty() const;
 
-    RenderContext& render_context_;
+    StateInterpolator& state_interpolator_;
 
     SimulationSnapshot current_sim_snapshot_;
     

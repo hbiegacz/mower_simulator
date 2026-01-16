@@ -9,7 +9,7 @@
 #include <functional>
 #include <mutex>
 #include <thread>
-#include "RenderContext.h"
+#include "StateInterpolator.h"
 
 class StateSimulation;
 
@@ -32,7 +32,7 @@ public:
     static void defaultSimulationLogic(StateSimulation& simulation, double dt);
 
     double getSimulationTime() const; 
-    RenderContext& getRenderContext();
+    StateInterpolator& getStateInterpolator();
 
 private:
     void runSimulation();
@@ -40,7 +40,7 @@ private:
 
     StateSimulation& simulation_;
 
-    RenderContext render_context_;
+    StateInterpolator state_interpolator_;
 
     std::thread simulation_thread_;
     std::mutex state_mutex_; 
