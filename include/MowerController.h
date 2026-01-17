@@ -15,6 +15,7 @@ public:
     void addPoint(double x, double y);
     void deletePoint(unsigned int point_id);
     void moveToPoint(unsigned int point_id);
+    void getDistanceToPoint(unsigned int point_id, double& out_distance);
 
     void update(StateSimulation& sim, double dt);
 

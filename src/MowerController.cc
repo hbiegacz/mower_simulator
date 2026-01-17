@@ -38,6 +38,8 @@ void MowerController::moveToPoint(unsigned int point_id) {
     command_queue_.push(std::make_unique<MoveToPointCommand>(point_id));
 }
 
-void MowerController::moveInCircle(unsigned int centerPointId, unsigned int edgePointId) {
-    command_queue_.push(std::make_unique<MoveInCircleCommand>(centerPointId, edgePointId));
+void MowerController::getDistanceToPoint(unsigned int point_id, double& out_distance) {
+    command_queue_.push(std::make_unique<GetDistanceToPointCommand>(point_id, out_distance));
+}
+
 }

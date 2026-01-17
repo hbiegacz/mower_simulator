@@ -75,3 +75,13 @@ private:
     void executeMovementLogic(StateSimulation& sim, double dt, double distanceToTarget);
     bool isAlignedWithTarget(short rotationNeeded, double distanceToTarget) const;
 };
+
+class GetDistanceToPointCommand : public ICommand {
+public:
+    GetDistanceToPointCommand(unsigned int pointId, double& outDistance);
+    bool execute(StateSimulation& sim, double dt) override;
+
+private:
+    unsigned int point_id_;
+    double& out_distance_;
+};

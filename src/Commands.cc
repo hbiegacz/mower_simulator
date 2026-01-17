@@ -158,3 +158,30 @@ void MoveToPointCommand::executeMovementLogic(StateSimulation& sim, double dt, d
     
     sim.simulateMovement(move_dist);
 }
+
+GetDistanceToPointCommand::GetDistanceToPointCommand(unsigned int pointId, double& outDistance)
+    : point_id_(pointId), out_distance_(outDistance) {}
+
+bool GetDistanceToPointCommand::execute(StateSimulation& sim, double dt) {
+    auto coords = sim.getPointCoordinates(point_id_);
+    if (!coords) {
+        sim.getFileLogger().saveMessage("Error: Point " + std::to_string(point_id_) + " not found for GetDistanceToPoint.");
+        return true; 
+    }
+
+    double target_x = coords->first;
+    double target_y = coords->second;
+    double current_x = sim.getMower().getX();
+    double current_y = sim.getMower().getY();
+    double dx = target_x - current_x;
+    double dy = target_y - current_y;
+    double distance = std::sqrt(dx*dx + dy*dy);
+
+    out_distance_ = distance;
+
+    std::string msg = "Distance to point " + std::to_string(point_id_) + ": " + std::to_string(distance);
+    sim.getFileLogger().saveMessage(msg);
+
+    return true;
+}
+
