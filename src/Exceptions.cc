@@ -4,7 +4,7 @@
     Exception classes implemenetation.
 */
 
-#include "../include/Exceptions.h"
+#include "Exceptions.h"
 
 
 using namespace std;

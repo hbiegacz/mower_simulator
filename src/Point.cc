@@ -4,10 +4,10 @@
     Implementation of Point struct for lawn mower simulator. 
 */
 
-#include "../include/Point.h"
-#include "../include/Constants.h"
 #include <cmath>
 #include <iostream>
+#include "Point.h"
+#include "Constants.h"
 
 using namespace std;
 

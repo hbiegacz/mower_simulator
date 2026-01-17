@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "StateInterpolator.h"
 #include <cmath>
 #include <algorithm>
+#include "StateInterpolator.h"
 
 class RenderTimeController {
 public:

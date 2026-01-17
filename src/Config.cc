@@ -6,8 +6,8 @@
 
 #include <algorithm>
 #include <cmath>
-#include "../include/Constants.h"
-#include "../include/Config.h"
+#include "Constants.h"
+#include "Config.h"
 
 using namespace std;
 

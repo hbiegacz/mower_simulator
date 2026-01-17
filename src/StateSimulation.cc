@@ -8,13 +8,13 @@
 #include <cmath>
 #include <iostream>
 #include <optional>
-#include "../include/Constants.h"
-#include "../include/StateSimulation.h"
-#include "../include/Point.h"
-#include "../include/Lawn.h"
-#include "../include/Logger.h"
-#include "../include/MathHelper.h"
-#include "../include/Exceptions.h"
+#include "Constants.h"
+#include "StateSimulation.h"
+#include "Point.h"
+#include "Lawn.h"
+#include "Logger.h"
+#include "MathHelper.h"
+#include "Exceptions.h"
 
 using namespace std;
 

@@ -6,9 +6,9 @@
 
 #include <cmath>
 #include <cstdint>
-#include "../include/Lawn.h"
-#include "../include/MathHelper.h"
-#include "../include/Config.h"
+#include "Lawn.h"
+#include "MathHelper.h"
+#include "Config.h"
 
 using namespace std;
 

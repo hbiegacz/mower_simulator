@@ -10,8 +10,15 @@
 
 #include <queue>
 #include <memory>
-#include "Commands.h"
 #include "StateSimulation.h"
+#include "commands/AddPointCommand.h"
+#include "commands/DeletePointCommand.h"
+#include "commands/MoveCommand.h"
+#include "commands/MoveToPointCommand.h"
+#include "commands/GetDistanceToPointCommand.h"
+#include "commands/RotateCommand.h"
+#include "commands/RotateTowardsPointCommand.h"
+#include "commands/MowingOptionCommand.h"
 
 class MowerController {
 public:

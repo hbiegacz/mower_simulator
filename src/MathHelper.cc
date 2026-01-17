@@ -5,8 +5,8 @@
 */
 
 #include <cmath>
-#include "../include/Constants.h"
-#include "../include/MathHelper.h"
+#include "Constants.h"
+#include "MathHelper.h"
 
 using namespace std;
 

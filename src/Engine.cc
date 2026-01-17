@@ -3,12 +3,11 @@
     Implementation of the simulation Engine
 */
 
-#include "Engine.h"
-#include "StateSimulation.h"
-
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include "Engine.h"
+#include "StateSimulation.h"
 
 using namespace std::chrono;
 

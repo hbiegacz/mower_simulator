@@ -5,12 +5,12 @@
 */
 
 #include <cmath>
-#include "../include/Constants.h"
-#include "../include/Config.h"
-#include "../include/Lawn.h"
-#include "../include/Mower.h"
-#include "../include/MathHelper.h"
-#include "../include/Exceptions.h"
+#include "Constants.h"
+#include "Config.h"
+#include "Lawn.h"
+#include "Mower.h"
+#include "MathHelper.h"
+#include "Exceptions.h"
 
 
 using namespace std;

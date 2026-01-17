@@ -3,7 +3,7 @@
     Implementation of MowerController class.
 */
 
-#include "../include/MowerController.h"
+#include "MowerController.h"
 
 // Executes the front command in the queue. Commands run over multiple frames
 // until they return true (finished). Only then does the queue move to the next command.
