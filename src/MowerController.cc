@@ -1,0 +1,23 @@
+#include "../include/MowerController.h"
+
+void MowerController::move(double cm) {
+    command_queue_.push(std::make_unique<MoveCommand>(cm));
+}
+
+void MowerController::rotate(short deg) {
+    command_queue_.push(std::make_unique<RotateCommand>(deg));
+}
+
+void MowerController::update(StateSimulation& sim, double dt) {
+    if (command_queue_.empty()) {
+        return;
+    }
+
+    if (command_queue_.front()->execute(sim, dt)) {
+        command_queue_.pop();
+    }
+}
+
+bool MowerController::hasCommands() const {
+    return !command_queue_.empty();
+}

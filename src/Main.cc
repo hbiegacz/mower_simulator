@@ -17,6 +17,7 @@
 #include "StateSimulation.h"
 #include "Engine.h"
 #include "Visualizer.h"
+#include "MowerController.h"
 
 using namespace std;
 
@@ -62,6 +63,22 @@ int main(int argc, char *argv[]) {
     cout << "[Main] Initializing Engine" << endl;
     Engine engine(simulation); 
     engine.setSimulationSpeed(SIMULATION_SPEED_MULTIPLIER);
+
+    cout << "[Main] Setting up MowerController and user logic" << endl;
+    MowerController controller;
+    
+    // User script
+    controller.move(200);
+    controller.rotate(90);
+    controller.move(100);
+    controller.rotate(-90);
+    controller.move(100);
+    controller.rotate(180);
+    controller.move(200);
+
+    engine.setUserSimulationLogic([&controller](StateSimulation& sim, double dt) {
+        controller.update(sim, dt);
+    });
 
     cout << "[Main] Creating window" << endl;
     Visualizer visualizer(engine.getStateInterpolator()); 
