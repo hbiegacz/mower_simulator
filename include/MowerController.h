@@ -16,6 +16,8 @@ public:
     void deletePoint(unsigned int point_id);
     void moveToPoint(unsigned int point_id);
     void getDistanceToPoint(unsigned int point_id, double& out_distance);
+    void rotateTowardsPoint(unsigned int point_id);
+
 
     void update(StateSimulation& sim, double dt);
 
