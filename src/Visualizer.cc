@@ -56,7 +56,7 @@ void Visualizer::loadMowerImage() {
 void Visualizer::loadPointImages() {
     string assets_path = string(ASSETS_PATH);
     vector<string> point_colors = {
-        "blue", "green", "navy", "orange", "pink", "purple", "yellow"
+        "0_purple", "1_pink", "2_red", "3_orange", "4_yellow", "5_green", "6_blue", "7_navy"
     };
 
     for (const string& color : point_colors) {
