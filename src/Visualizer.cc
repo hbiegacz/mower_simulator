@@ -191,7 +191,7 @@ void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_sn
 
     QPointF center_pos = mapToScreen(sim_snapshot.x_, sim_snapshot.y_);
     painter.translate(center_pos);
-    painter.rotate(MathHelper::convertRadiansToDegrees(-sim_snapshot.angle_));
+    painter.rotate(sim_snapshot.angle_);
     
     QRectF target_rect(-mower_w_px / 2.0, -mower_h_px / 2.0, mower_w_px, mower_h_px);
     
