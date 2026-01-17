@@ -229,9 +229,11 @@ void Visualizer::renderPoints(QPainter& painter) const {
     
     if (point_height < MIN_POINT_HEIGHT) point_height = MIN_POINT_HEIGHT;
 
-    for (size_t i = 0; i < points.size() && i < point_pixmaps_.size(); ++i) {
+    for (size_t i = 0; i < points.size(); ++i) {
         const auto& point = points[i];
-        const auto& pixmap = point_pixmaps_[i];
+        
+        size_t image_index = i % point_pixmaps_.size();
+        const auto& pixmap = point_pixmaps_[image_index];
         
         QPointF screen_pos = mapToScreen(point.getX(), point.getY());
         

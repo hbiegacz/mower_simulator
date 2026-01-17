@@ -217,11 +217,7 @@ void StateSimulation::simulateMowingOptionOff() {
 void StateSimulation::simulateAddPoint(const double& x, const double& y) {
     string message;
 
-    if (points_.size() >= 7) {
-        message = "Unable to add point. Maximum number of points (7) reached.";
-        logger_.push(Log(time_, message));
-    }
-    else if(lawn_.isPointInLawn(x, y)) {
+    if(lawn_.isPointInLawn(x, y)) {
         points_.push_back(Point(x, y, next_point_id_));
 
         message = "Added point with id: " + to_string(next_point_id_) + "on coordinates x: " + to_string(x) + 
