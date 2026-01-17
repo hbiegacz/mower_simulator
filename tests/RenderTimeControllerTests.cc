@@ -30,20 +30,6 @@ TEST(RenderTimeControllerTest, updateAdvancesTime) {
     EXPECT_GT(smoothed_time, 0.0);
 }
 
-TEST(RenderTimeControllerTest, resetResetsSmoothedTime) {
-    StateInterpolator interpolator;
-    RenderTimeController controller(interpolator);
-    
-    SimulationSnapshot snapshot;
-    snapshot.simulation_time_ = 1000.0;
-    interpolator.addSimulationSnapshot(snapshot);
-
-    controller.update(1000.0); 
-    EXPECT_GT(controller.getSmoothedTime(), 0.0);
-
-    controller.reset();
-    EXPECT_DOUBLE_EQ(controller.getSmoothedTime(), 0.0);
-}
 
 TEST(RenderTimeControllerTest, updateFollowsSpeedMultiplier) {
     StateInterpolator interpolator;

@@ -1,4 +1,22 @@
+/*
+    Author: Hanna Biegacz
+    Implementation of MowerController class.
+*/
+
 #include "../include/MowerController.h"
+
+// Executes the front command in the queue. Commands run over multiple frames
+// until they return true (finished). Only then does the queue move to the next command.
+// This ensures commands execute in order without overlapping.
+void MowerController::update(StateSimulation& sim, double dt) {
+    if (command_queue_.empty()) {
+        return;
+    }
+
+    if (command_queue_.front()->execute(sim, dt)) {
+        command_queue_.pop();
+    }
+}
 
 void MowerController::move(double cm) {
     command_queue_.push(std::make_unique<MoveCommand>(cm));
@@ -10,20 +28,6 @@ void MowerController::move(const double* distance_ptr, double scale) {
 
 void MowerController::rotate(short deg) {
     command_queue_.push(std::make_unique<RotateCommand>(deg));
-}
-
-void MowerController::update(StateSimulation& sim, double dt) {
-    if (command_queue_.empty()) {
-        return;
-    }
-
-    if (command_queue_.front()->execute(sim, dt)) {
-        command_queue_.pop();
-    }
-}
-
-bool MowerController::hasCommands() const {
-    return !command_queue_.empty();
 }
 
 void MowerController::setMowing(bool enable) {

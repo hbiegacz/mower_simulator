@@ -33,6 +33,8 @@ Engine::~Engine() {
     stop();
 }
 
+// Launches the simulation in a separate thread so it runs independently
+// from the visualization. Does nothing if already running.
 void Engine::start() {
     if (running_) {
         return;
@@ -42,6 +44,8 @@ void Engine::start() {
     simulation_thread_ = std::thread(&Engine::runSimulation, this);
 }
 
+// Safely shuts down the simulation thread. Waits for the thread
+// to finish before returning to prevent crashes.
 void Engine::stop() {
     if (!running_) {
         return;
@@ -68,13 +72,15 @@ double Engine::getSpeedMultiplier() const {
     return speed_multiplier_.load();
 }
 
+// Allows you to replace the default simulation behavior with custom logic.
+// The callback function will be called every simulation step.
 void Engine::setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback) {
     std::lock_guard<std::mutex> lock(state_mutex_);
     user_simulation_callback_ = callback;
 }
 
 void Engine::defaultSimulationLogic(StateSimulation& simulation, double dt) {
-    simulation.simulateMovement(simulation.getMower().getSpeed() * dt);
+
 }
 
 double Engine::getSimulationTime() const {
@@ -85,6 +91,10 @@ StateInterpolator& Engine::getStateInterpolator() {
     return state_interpolator_;
 }
 
+// Main simulation loop running in a separate thread. Uses "fixed timestep" which means
+// the simulation always advances by exactly 0.02 seconds per step, regardless of how
+// fast or slow the computer is. This keeps physics consistent and predictable.
+// The "accumulator" collects real time that has passed and converts it into fixed steps.
 void Engine::runSimulation() {
     using Clock = std::chrono::steady_clock;
     auto previous_time = Clock::now();
@@ -110,6 +120,8 @@ void Engine::runSimulation() {
     }
 }
 
+// Executes one simulation step: runs user logic, saves logs, and creates
+// a snapshot for smooth rendering. Thread-safe with mutex lock.
 void Engine::updateSimulation(double dt) {
     {
         std::lock_guard<std::mutex> lock(state_mutex_);

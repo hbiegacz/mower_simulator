@@ -27,7 +27,7 @@ TEST(StateInterpolatorTest, setStaticSimulationDataUpdatesData) {
     StaticSimulationData data;
     data.lawn_width_ = 100;
     data.lawn_length_ = 200;
-    data.width_cm = 50.0;
+    data.width_cm_ = 50.0;
     data.length_cm = 100.0;
     data.blade_diameter_cm = 25.0;
 
@@ -36,7 +36,7 @@ TEST(StateInterpolatorTest, setStaticSimulationDataUpdatesData) {
 
     EXPECT_EQ(retrieved_data.lawn_width_, data.lawn_width_);
     EXPECT_EQ(retrieved_data.lawn_length_, data.lawn_length_);
-    EXPECT_DOUBLE_EQ(retrieved_data.width_cm, data.width_cm);
+    EXPECT_DOUBLE_EQ(retrieved_data.width_cm_, data.width_cm_);
     EXPECT_DOUBLE_EQ(retrieved_data.length_cm, data.length_cm);
     EXPECT_DOUBLE_EQ(retrieved_data.blade_diameter_cm, data.blade_diameter_cm);
 }

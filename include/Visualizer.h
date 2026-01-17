@@ -24,6 +24,8 @@ class Visualizer : public QWidget {
 public:
     explicit Visualizer(StateInterpolator& render_context, QWidget* parent = nullptr);
     ~Visualizer() override;
+    Visualizer(const Visualizer&) = delete;
+    Visualizer& operator=(const Visualizer&) = delete;
 
     QSize sizeHint() const override;
     QSize minimumSizeHint() const override;
@@ -44,7 +46,7 @@ private:
     StateInterpolator& state_interpolator_;
     SimulationSnapshot current_sim_snapshot_;
     RenderTimeController render_time_controller_;
-    StaticSimulationData static_simulation_data;
+    StaticSimulationData static_simulation_data_;
     std::vector<QPixmap> point_pixmaps_;
     QPixmap mower_image_;
     QPointF map_offset_;
@@ -58,10 +60,10 @@ private:
     void updateLayout();
     void loadMowerImage();
     void loadPointImages();
-    void renderLawn(QPainter& painter);
-    void renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot);
-    void renderPoints(QPainter& painter);
-    QPointF mapToScreen(double x_cm, double y_cm);
+    void renderLawn(QPainter& painter) const;
+    void renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot) const;
+    void renderPoints(QPainter& painter) const;
+    QPointF mapToScreen(double x_cm, double y_cm) const;
 
     bool hasValidLawnDimensions() const;
     bool isLawnDataEmpty() const;

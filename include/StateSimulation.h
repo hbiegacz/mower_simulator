@@ -1,8 +1,9 @@
 /* 
-    Author: Maciej Cieslik
+    Author: Maciej Cieslik, Hanna Biegacz
     
     Handles simulation state. StateSimulation is responsible for changing state of the world 
-    by manipulating the mower and the lawn. Calculates simulation time.
+    by manipulating the mower and the lawn. Calculates simulation time and creates lightweight 
+    snapshots for the interpolator (to minimize locking time and build a history buffer for smooth animation).
 
 */
 
@@ -48,8 +49,12 @@ public:
     const u_int64_t& getTime() const;
     const std::vector<Point>& getPoints() const;
     const unsigned int& getNextPointId() const;
+    StaticSimulationData getStaticData() const;
     const FileLogger& getFileLogger() const;
     void logArrivalAtPoint(unsigned int pointId);
+    SimulationSnapshot buildSimulationSnapshot() const;
+    std::optional<std::pair<double, double>> getPointCoordinates(unsigned int pointId);
+    std::pair<short, double> calculateNavigationVector(double targetX, double targetY) const; 
 
     void simulateMovement(const double& distance);
     void simulateRotation(const short& angle);
@@ -58,9 +63,5 @@ public:
     void simulateAddPoint(const double& x, const double& y);
     void simulateDeletePoint(const unsigned int& pointIndex);
     void simulateMovementToPoint(const unsigned int& pointIndex);
-    std::optional<std::pair<double, double>> getPointCoordinates(unsigned int pointId);
-    std::pair<short, double> calculateNavigationVector(double targetX, double targetY) const; 
 
-    SimulationSnapshot buildSimulationSnapshot() const;
-    StaticSimulationData getStaticData() const;
 };

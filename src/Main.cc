@@ -32,7 +32,7 @@ using namespace std;
     constexpr unsigned int MOWER_LENGTH_CM = 50;
     constexpr unsigned int BLADE_DIAMETER_CM = 50;
     constexpr unsigned int MOWER_SPEED_CM_S = 100;
-    constexpr char*        LOG_PATH = "../simulation_logs.log";
+    constexpr const char*  LOG_PATH = "../simulation_logs.log";
     constexpr int          TARGET_FPS = 100;
     constexpr int          RENDER_INTERVAL_MS = 1000 / TARGET_FPS;
 

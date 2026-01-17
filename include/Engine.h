@@ -30,11 +30,11 @@ public:
 
     void setSimulationSpeed(double multiplier);
     double getSpeedMultiplier() const;
-    void setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback);
-
-    static void defaultSimulationLogic(StateSimulation& simulation, double dt);
     double getSimulationTime() const; 
-    StateInterpolator& getStateInterpolator();
+    StateInterpolator& getStateInterpolator(); //todo: const???
+
+    void setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback);
+    static void defaultSimulationLogic(StateSimulation& simulation, double dt);
 
 private:
     void runSimulation();
@@ -42,13 +42,10 @@ private:
     void processLogs(); 
 
     StateSimulation& simulation_;
-
     StateInterpolator state_interpolator_;
-
     std::thread simulation_thread_;
     std::mutex state_mutex_; 
     std::atomic<bool> running_;
-
     std::atomic<double> speed_multiplier_;
     const double fixed_timestep_; 
 

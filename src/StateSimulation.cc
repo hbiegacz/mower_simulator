@@ -362,7 +362,7 @@ StaticSimulationData StateSimulation::getStaticData() const {
     StaticSimulationData data;
     data.lawn_width_ = lawn_.getWidth();
     data.lawn_length_ = lawn_.getLength();
-    data.width_cm = mower_.getWidth();
+    data.width_cm_ = mower_.getWidth();
     data.length_cm = mower_.getLength();
     data.blade_diameter_cm = mower_.getBladeDiameter();
     return data;

@@ -1,3 +1,11 @@
+/*
+    Author: Hanna Biegacz
+    This class is responsible for handling user input and executing commands.
+    Manages a command queue for the lawn mower.
+    Provides simple methods to control the mower (move, rotate, mowing on/off)
+    and executes commands sequentially during simulation updates.
+*/
+
 #pragma once
 
 #include <queue>
@@ -8,6 +16,9 @@
 class MowerController {
 public:
     MowerController() = default;
+    ~MowerController() = default;
+    MowerController(const MowerController&) = delete;
+    MowerController& operator=(const MowerController&) = delete;
 
     void move(double cm);
     void move(const double* distance_ptr, double scale = 1.0);
@@ -21,8 +32,6 @@ public:
 
 
     void update(StateSimulation& sim, double dt);
-
-    bool hasCommands() const;
 
 private:
     std::queue<std::unique_ptr<ICommand>> command_queue_;

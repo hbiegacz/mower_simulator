@@ -25,7 +25,7 @@ const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 Visualizer::Visualizer(StateInterpolator& render_context, QWidget* parent)
     : QWidget(parent), state_interpolator_(render_context), render_time_controller_(render_context) { 
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(0);
-    static_simulation_data = state_interpolator_.getStaticSimulationData();
+    static_simulation_data_ = state_interpolator_.getStaticSimulationData();
 
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
@@ -70,9 +70,12 @@ void Visualizer::loadPointImages() {
     }
 }
 
+// Calculates how to fit the simulation lawn inside the window. Finds the scale factor
+// (zoom level) that makes the lawn fit, and calculates the offset to center it.
+// The lawn maintains its aspect ratio and is centered in the window.
 void Visualizer::updateLayout() {
-    double lawn_width_cm = static_simulation_data.lawn_width_;
-    lawn_length_cm_ = static_simulation_data.lawn_length_;
+    double lawn_width_cm = static_simulation_data_.lawn_width_;
+    lawn_length_cm_ = static_simulation_data_.lawn_length_;
     
     if (!hasValidLawnDimensions()) return;
 
@@ -80,7 +83,7 @@ void Visualizer::updateLayout() {
                         static_cast<double>(height()) / lawn_length_cm_);
     
     double x = (width() - (lawn_width_cm * scale_factor_)) / 2;
-    double y = (height() - (static_simulation_data.lawn_length_ * scale_factor_)) / 2;
+    double y = (height() - (static_simulation_data_.lawn_length_ * scale_factor_)) / 2;
     map_offset_ = QPointF(x, y);
 }
 
@@ -90,13 +93,18 @@ void Visualizer::resizeEvent(QResizeEvent* event) {
     update();
 }
 
-QPointF Visualizer::mapToScreen(double x_cm, double y_cm) {
+// Converts simulation coordinates (in centimeters) to screen coordinates (in pixels).
+// Important: The simulation uses standard math coordinates (Y up), but screens use
+// Y down, so we flip the Y axis. Also applies scaling and centering offset.
+QPointF Visualizer::mapToScreen(double x_cm, double y_cm) const{
     double screen_x = map_offset_.x() + (x_cm * scale_factor_);
     double screen_y = map_offset_.y() + (lawn_length_cm_ * scale_factor_) - (y_cm * scale_factor_);
     
     return QPointF(screen_x, screen_y);
 }
 
+// Main rendering function called automatically by Qt every frame. Updates time,
+// fetches the current interpolated state, and draws the lawn, points, and mower.
 void Visualizer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     setupPainter(painter);
@@ -111,6 +119,9 @@ void Visualizer::paintEvent(QPaintEvent* event) {
     update(); 
 }
 
+// Tracks time between frames using Qt's timer. On first run, starts the timer.
+// On subsequent runs, restarts it and returns elapsed milliseconds.
+// This time is used by RenderTimeController for smooth animation.
 void Visualizer::updateRenderTime() {
     double ms_since_last_frame = 0.0; 
     
@@ -128,15 +139,17 @@ void Visualizer::setupPainter(QPainter& painter) {
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 }
 
+// Fetches the latest interpolated state for the current render time and
+// updates layout in case window size or simulation data changed.
 void Visualizer::refreshStateAndLayout() {
     double render_time = render_time_controller_.getSmoothedTime();
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(render_time);
-    static_simulation_data = state_interpolator_.getStaticSimulationData();
+    static_simulation_data_ = state_interpolator_.getStaticSimulationData();
     updateLayout();
 }
 
 bool Visualizer::hasValidLawnDimensions() const {
-    return static_simulation_data.lawn_width_ > 0 && static_simulation_data.lawn_length_ > 0;
+    return static_simulation_data_.lawn_width_ > 0 && static_simulation_data_.lawn_length_ > 0;
 }
 
 bool Visualizer::isLawnDataEmpty() const {
@@ -144,7 +157,11 @@ bool Visualizer::isLawnDataEmpty() const {
     return fields.empty() || fields[0].empty();
 }
 
-void Visualizer::renderLawn(QPainter& painter) {
+// Draws the lawn by creating a QImage from the boolean grid (mowed vs unmowed).
+// Each cell in the simulation grid becomes one pixel in the image. The image is then
+// stretched to fit the screen using the calculated scale. Antialiasing is temporarily
+// disabled to keep grass cells sharp and prevent blending between mowed/unmowed areas.
+void Visualizer::renderLawn(QPainter& painter) const {
     if (isLawnDataEmpty()) return;
 
     const auto& fields = current_sim_snapshot_.fields_;
@@ -162,9 +179,9 @@ void Visualizer::renderLawn(QPainter& painter) {
         }
     }
 
-    QPointF top_left_px = mapToScreen(0, static_simulation_data.lawn_length_);
-    double w_px = static_simulation_data.lawn_width_ * scale_factor_;
-    double h_px = static_simulation_data.lawn_length_ * scale_factor_;
+    QPointF top_left_px = mapToScreen(0, static_simulation_data_.lawn_length_);
+    double w_px = static_simulation_data_.lawn_width_ * scale_factor_;
+    double h_px = static_simulation_data_.lawn_length_ * scale_factor_;
     QRectF target_rect(top_left_px.x(), top_left_px.y(), w_px, h_px);
 
     bool old_aa = painter.renderHints().testFlag(QPainter::Antialiasing);
@@ -175,6 +192,8 @@ void Visualizer::renderLawn(QPainter& painter) {
     painter.setRenderHint(QPainter::Antialiasing, old_aa);
 }
 
+// Calculates the display size of the mower in pixels. The mower should be at least
+// as wide as its blade diameter for realistic representation so that the mowed path isn't wider than the mower.
 void Visualizer::calculateMowerRenderSize(double mower_width, double mower_length, double blade_diameter, double& out_w_px, double& out_h_px) const {
     double display_width_cm = std::max(mower_width, blade_diameter);
     
@@ -185,10 +204,10 @@ void Visualizer::calculateMowerRenderSize(double mower_width, double mower_lengt
     out_h_px = display_length_cm * scale_factor_;
 }
 
-void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot) {
+void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot) const {
     double mower_w_px, mower_h_px;
-    calculateMowerRenderSize(static_simulation_data.width_cm, static_simulation_data.length_cm, 
-                            static_simulation_data.blade_diameter_cm, mower_w_px, mower_h_px);
+    calculateMowerRenderSize(static_simulation_data_.width_cm_, static_simulation_data_.length_cm, 
+                            static_simulation_data_.blade_diameter_cm, mower_w_px, mower_h_px);
     painter.save();
 
     QPointF center_pos = mapToScreen(sim_snapshot.x_, sim_snapshot.y_);
@@ -201,7 +220,7 @@ void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_sn
     painter.restore();
 }
 
-void Visualizer::renderPoints(QPainter& painter) {
+void Visualizer::renderPoints(QPainter& painter) const {
     double MIN_POINT_HEIGHT = 30.0;
     double POINT_PROPORTION = 0.05;
     const auto& points = current_sim_snapshot_.points_;

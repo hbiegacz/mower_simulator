@@ -3,7 +3,7 @@
     
     This class controls the animation time to ensure smooth movement.
     It calculates exactly which moment of the simulation should be shown right now.
-    It handles synchronization between real time and simulation time.
+    It handles synchronization between real time (what the user sees) and simulation time.
 */
 
 #pragma once
@@ -15,10 +15,11 @@
 class RenderTimeController {
 public:
     explicit RenderTimeController(const StateInterpolator& interpolator);
-    
+    RenderTimeController(const RenderTimeController&) = delete;
+    RenderTimeController& operator=(const RenderTimeController&) = delete;
+
     void update(double dt_ms);
     double getSmoothedTime() const;
-    void reset();
 
 private:
     static constexpr double BASE_BUFFER_DELAY_MS = 200.0;  
@@ -29,8 +30,8 @@ private:
     double smoothed_render_time_ = 0.0;
 
     double calculateIdealRenderTime(double actual_sim_time, double speed_multiplier) const;
-    void advanceRenderTime(double dt_ms, double speed_multiplier);
+    void advanceRenderTimeByDelta(double dt_ms, double speed_multiplier);
     void syncWithSimulationClock(double actual_sim_time, double speed_multiplier);
-    void applySoftTimeCorrection(double ideal_time);
-    void performHardTimeReset(double ideal_time);
+    void applyGradualTimeCorrection(double ideal_time);
+    void forceImmediateTimeReset(double ideal_time);
 };
