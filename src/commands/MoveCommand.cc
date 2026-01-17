@@ -6,7 +6,6 @@
 
 #include "commands/MoveCommand.h"
 #include "Constants.h"
-#include <iostream>
 #include <string>
 
 using namespace std;
@@ -26,9 +25,6 @@ bool MoveCommand::execute(StateSimulation& sim, double dt) {
     if (!initialized_) {
         if (deferred_distance_) {
             distance_left_ = (*deferred_distance_) * scale_;
-            sim.getFileLogger().saveMessage("MoveCommand init. Deferred val: " + to_string(*deferred_distance_) + ", Scale: " + to_string(scale_) + ", DistLeft: " + to_string(distance_left_));
-        } else {
-             sim.getFileLogger().saveMessage("MoveCommand init. No deferred pointer. DistLeft: " + to_string(distance_left_));
         }
         initialized_ = true;
     }
