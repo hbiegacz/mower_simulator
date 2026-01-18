@@ -79,7 +79,7 @@ void Engine::setUserSimulationLogic(std::function<void(StateSimulation&, double)
 }
 
 void Engine::defaultSimulationLogic(StateSimulation& simulation, double dt) {
-
+    // by default the mower is doing nothing
 }
 
 double Engine::getSimulationTime() const {

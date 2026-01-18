@@ -22,12 +22,11 @@
 class CommandTests : public ::testing::Test {
 protected:
     void SetUp() override {
-        // Initialize Config if necessary (using some default values)
-        Config::initializeRuntimeConstants(1000, 1000); // 10m x 10m lawn
+        Config::initializeRuntimeConstants(1000, 1000); 
         Config::initializeMowerConstants(50, 50, 0, 0, 0);
 
         lawn = std::make_unique<Lawn>(1000, 1000);
-        mower = std::make_unique<Mower>(50, 50, 20, 10); // width, length, blade, speed
+        mower = std::make_unique<Mower>(50, 50, 20, 10); 
         logger = std::make_unique<Logger>();
         fileLogger = std::make_unique<FileLogger>("test_command_log.txt");
         
@@ -35,7 +34,6 @@ protected:
     }
     
     void TearDown() override {
-        // cleanup if needed
     }
 
     std::unique_ptr<Lawn> lawn;
@@ -80,8 +78,8 @@ TEST_F(CommandTests, MowingOptionCommandEnablesAndDisablesMowing) {
 
 TEST_F(CommandTests, MoveCommandMovesMowerForward) {
     double initialX = simulation->getMower().getX();
-    double initialY = simulation->getMower().getY(); // Track Y as well
-    MoveCommand command(10.0); // Move 10 units
+    double initialY = simulation->getMower().getY(); 
+    MoveCommand command(10.0); 
     
     while (!command.execute(*simulation, 0.1));
     
@@ -94,13 +92,11 @@ TEST_F(CommandTests, MoveCommandMovesMowerForward) {
 
 TEST_F(CommandTests, RotateCommandRotatesMower) {
     double initialAngle = simulation->getMower().getAngle();
-    RotateCommand command(90); // Rotate 90 degrees
+    RotateCommand command(90); 
     
     while (!command.execute(*simulation, 0.1));
 
     double finalAngle = simulation->getMower().getAngle();
-    // Angles are unsigned short 0-359 in Mower.
-    // 90 degrees added.
     unsigned short expectedAngle = (initialAngle + 90);
     if (expectedAngle >= 360) expectedAngle -= 360;
     
@@ -108,7 +104,6 @@ TEST_F(CommandTests, RotateCommandRotatesMower) {
 }
 
 TEST_F(CommandTests, GetDistanceToPointCommandCalculatesCorrectDistance) {
-    // Mower at 0,0 (default for now)
     simulation->simulateAddPoint(10.0, 0.0); 
     
     auto points = simulation->getPoints();
@@ -135,12 +130,11 @@ TEST_F(CommandTests, RotateTowardsPointCommandRotatesToFacePoint) {
     int safety = 0;
     while (!command.execute(*simulation, 0.1) && safety++ < 1000);
     
-    // Just asserting command completion is a good enough integration test step.
     ASSERT_LT(safety, 1000);
 }
 
 TEST_F(CommandTests, MoveToPointCommandMovesMowerToPoint) {
-    simulation->simulateAddPoint(50.0, 50.0); // FIXED THIS LINE
+    simulation->simulateAddPoint(50.0, 50.0); 
     auto points = simulation->getPoints();
     unsigned int pointId = points.back().getId();
     

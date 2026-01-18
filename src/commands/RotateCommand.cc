@@ -38,25 +38,30 @@ double RotateCommand::calculateRotationStepForFrame(double dt) const {
 }
 
 void RotateCommand::updateInternalRotationState(double step) {
+    constexpr double ROUNDING_OFFSET = 0.5; 
     rotation_accumulator_ += step;
 
     if (step > 0) {
-        angle_left_ -= static_cast<short>(floor(step + 0.5)); // Zaokrąglanie
+        angle_left_ -= static_cast<short>(floor(step + ROUNDING_OFFSET)); 
     } else {
-        angle_left_ -= static_cast<short>(ceil(step - 0.5));
+        angle_left_ -= static_cast<short>(ceil(step - ROUNDING_OFFSET));
     }
 }
 
 void RotateCommand::applyAccumulatedRotationToSimulation(StateSimulation& sim) {
-    if (abs(rotation_accumulator_) >= 1.0) {
+    constexpr double MIN_DEGREE_THRESHOLD = 1.0;
+    
+    if (abs(rotation_accumulator_) >= MIN_DEGREE_THRESHOLD) {
         short actual_rot_to_apply = static_cast<short>(rotation_accumulator_);
         
         sim.simulateRotation(actual_rot_to_apply);
-        
         rotation_accumulator_ -= actual_rot_to_apply;
     }
 }
 
 bool RotateCommand::isRotationFinished() const {
-    return angle_left_ == 0 && abs(rotation_accumulator_) < 0.5;
+    constexpr short NO_ROTATION_LEFT = 0;
+    constexpr double ROTATION_TOLERANCE = 0.5;
+    
+    return angle_left_ == NO_ROTATION_LEFT && abs(rotation_accumulator_) < ROTATION_TOLERANCE;
 }
