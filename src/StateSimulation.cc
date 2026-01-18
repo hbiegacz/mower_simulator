@@ -332,11 +332,18 @@ double StateSimulation::calculateRotationNoDx(const double& dy) const {
 
 
 double StateSimulation::calculateRotationDx(const double& dy, const double& dx) const {
+    const short RIGHT_ANGLE = 90;
+    const short HALF_CIRCLE = 180;
+    const short FULL_CIRCLE = 360;
+
     double target_angle_in_radians = atan2(dy, dx);
     double target_angle_degrees = MathHelper::convertRadiansToDegrees(target_angle_in_radians);
 
-    short SQUARE_ANGLE = 90;
-    short rotation = SQUARE_ANGLE - short(target_angle_degrees) - mower_.getAngle();
+    short rotation = RIGHT_ANGLE - short(target_angle_degrees) - mower_.getAngle();
+
+    // Normalize angle to be in [-180, 180]
+    while (rotation > HALF_CIRCLE) rotation -= FULL_CIRCLE;
+    while (rotation < -HALF_CIRCLE) rotation += FULL_CIRCLE;
 
     return rotation;
 }
