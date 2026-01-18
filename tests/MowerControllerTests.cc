@@ -326,3 +326,28 @@ TEST(MowerControllerUpdate, updateExecutesMultipleCommandsInOrder) {
 
     EXPECT_GT(stateSimulation.getTime(), 0);
 }
+
+TEST(MowerControllerGetCurrentPosition, getCurrentPositionRetrievesMowerPosition) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int mower_width = 120;
+    unsigned int mower_length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMowerConstants(mower_width, mower_length, 450.0, 550.0, 0);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mower mower = Mower(mower_width, mower_length, blade_diameter, speed);
+    Logger logger = Logger();
+    FileLogger fileLogger = FileLogger("test_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    MowerController controller = MowerController();
+    double out_x = 0.0, out_y = 0.0;
+    double delta_time = 0.016;
+
+    controller.getCurrentPosition(out_x, out_y);
+    controller.update(stateSimulation, delta_time);
+
+    EXPECT_DOUBLE_EQ(450.0, out_x);
+    EXPECT_DOUBLE_EQ(550.0, out_y);
+}

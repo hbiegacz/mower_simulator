@@ -53,3 +53,11 @@ void MowerController::getDistanceToPoint(unsigned int point_id, double& out_dist
 void MowerController::rotateTowardsPoint(unsigned int point_id) {
     command_queue_.push(std::make_unique<RotateTowardsPointCommand>(point_id));
 }
+
+void MowerController::getCurrentAngle(unsigned short& out_angle) {
+    command_queue_.push(std::make_unique<GetCurrentAngleCommand>(out_angle));
+}
+
+void MowerController::getCurrentPosition(double& out_x, double& out_y) {
+    command_queue_.push(std::make_unique<GetCurrentPositionCommand>(out_x, out_y));
+}

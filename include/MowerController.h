@@ -19,6 +19,8 @@
 #include "commands/RotateCommand.h"
 #include "commands/RotateTowardsPointCommand.h"
 #include "commands/MowingOptionCommand.h"
+#include "commands/GetCurrentAngleCommand.h"
+#include "commands/GetCurrentPositionCommand.h"
 
 class MowerController {
 public:
@@ -36,6 +38,9 @@ public:
     void moveToPoint(unsigned int point_id);
     void getDistanceToPoint(unsigned int point_id, double& out_distance);
     void rotateTowardsPoint(unsigned int point_id);
+    void getCurrentAngle(unsigned short& out_angle);
+    void getCurrentPosition(double& out_x, double& out_y);
+
 
 
     void update(StateSimulation& sim, double dt);

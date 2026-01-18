@@ -23,7 +23,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mower_simulator src/Main.cc src/Config.cc src/Mower.cc src/Lawn.cc src/Exceptions.cc src/Visualizer.cc include/Visualizer.h src/Engine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc src/Point.cc src/FileLogger.cc src/StateInterpolator.cc src/RenderTimeController.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc)
+add_executable(mower_simulator src/Main.cc src/Config.cc src/Mower.cc src/Lawn.cc src/Exceptions.cc src/Visualizer.cc include/Visualizer.h src/Engine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc src/Point.cc src/FileLogger.cc src/StateInterpolator.cc src/RenderTimeController.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/commands/GetCurrentAngleCommand.cc src/commands/GetCurrentPositionCommand.cc)
 
 add_definitions(-DASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/include/assets")
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
@@ -73,11 +73,11 @@ add_executable(RenderTimeControllerTests tests/RenderTimeControllerTests.cc src/
 target_link_libraries(RenderTimeControllerTests gtest gtest_main pthread)
 add_test(NAME RenderTimeControllerTests COMMAND RenderTimeControllerTests)
 
-add_executable(CommandTests tests/CommandTests.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc)
+add_executable(CommandTests tests/CommandTests.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc src/commands/GetCurrentAngleCommand.cc src/commands/GetCurrentPositionCommand.cc)
 target_link_libraries(CommandTests gtest gtest_main pthread)
 add_test(NAME CommandTests COMMAND CommandTests)
 
-add_executable(MowerControllerTests tests/MowerControllerTests.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc)
+add_executable(MowerControllerTests tests/MowerControllerTests.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc src/commands/GetCurrentAngleCommand.cc src/commands/GetCurrentPositionCommand.cc)
 target_link_libraries(MowerControllerTests gtest gtest_main pthread)
 add_test(NAME MowerControllerTests COMMAND MowerControllerTests)
 
