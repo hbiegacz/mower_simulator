@@ -54,4 +54,11 @@ else
 fi
 
 echo
+echo "IV. Installing Doxygen (for documentation generation)..."
+if command -v apt-get &> /dev/null; then
+    sudo apt-get install -y doxygen graphviz
+    echo "Doxygen and Graphviz installed successfully!"
+fi
+
+echo
 echo "=== Setup process finished! ==="
