@@ -95,7 +95,7 @@ Aviable commands:
 - `getDistanceToPoint(unsigned int point_id, double& out_distance)`
 - `getCurrentAngle(unsigned short& out_angle)`
 - `getCurrentPosition(double& out_x, double& out_y)`
-> Note: since the commands are queued, the results received from the out_parameters will not be updated until the next command is executed.
+> Note: since the commands are queued, the results received from the out_parameters will not be updated until the command is **executed**.
 
 Users are also able to customize other simulation parameters, such as the mower's speed and dimensions, as well as the lawn's dimensions.
 Another thing that can be customized is the overall simulation speed.
