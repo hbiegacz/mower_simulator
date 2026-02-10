@@ -35,7 +35,30 @@ Take command of the mower's movements using the `controller` object. The applica
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
-....
+The system follows the **Single Responsibility Principle (SRP)** by decoupling physics, control logic, and presentation layers. This ensures that changes in rendering don't break the movement laws.
+
+### Decoupled Control (Command Pattern)
+- `MowerController`: Provides a clean API for the user to queue actions.
+- `Engine`: A central coordinator that executes the queue step-by-step, keeping the user logic isolated from the internal simulation loop.
+
+### Physics vs. Presentation
+**Workflow**: `StateSimulation` → `SimulationSnapshot` → `StateInterpolator` → `Visualizer` <br/>
+To maintain a "Single Source of Truth," physics is calculated independently of frame rates, and **only the `StateSimulation` class can actually change the world state.**
+- `StateSimulation`: The core engine responsible for the physics and logic rules of the simulation.
+- `SimulationSnapshot`: Since the simulation runs on its own thread, we use this object to store the state at a given moment. This allows us to **interpolate and visualize independently without blocking the simulation thread.**
+- `StateInterpolator`: Smoothens movement by interpolating between snapshots, **making sure the mower doesn't "teleport" or jump** between frame updates.
+- `Visualizer (Qt)`: Only handles drawing. It doesn't know *why* the mower moved, only *where* to render it.
+
+### Isolated Logging
+**Workflow**: `Logger` → `FileLogger` <br/>
+Generating diagnostic data is separated from **saving it to files**.
+- `Logger`: Collects events without knowing how they will be stored.
+- `FileLogger`: Handles the specific task of physical disk I/O, allowing the system to switch to other storage methods without touching simulation code.
+
+### Thorough Testing
+The project maintains high code quality with **80.7% line coverage** across the core logic, verified using **GCOVR**. Comprehensive unit tests are implemented with **Google Test**.
+
+All 13 test modules can be found in the [CODE/tests/](CODE/tests) directory.
 
 ## ▶️ Running the Simulation
  Dependencies and necesary tools
