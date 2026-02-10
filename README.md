@@ -20,9 +20,11 @@ Take command of the mower's movements using the `controller` object. The applica
   <tr>
     <td align="center"><b>Drawing an 8</b><br/><img src="CODE/docs/drawing_an_8.gif" width="300" alt="Drawing an 8"/></td>
     <td align="center"><b>Drawing a Star</b><br/><img src="CODE/docs/drawing_a_star.gif" width="300" alt="Drawing a star"/></td>
+    </tr>
+    <tr>
     <td align="center"><b>Drawing a Sine Wave</b><br/><img src="CODE/docs/drawing_a_sine_wave.gif" width="300" alt="Drawing a sine wave"/></td>
     <td align="center"><b>Drawing a Spiral</b><br/><img src="CODE/docs/drawing_a_spiral.gif" width="300" alt="Drawing a spiral"/></td>
-  </tr>
+    </tr>
 </table>
 
 ## 🛠️ Architecture
