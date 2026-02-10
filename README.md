@@ -1,9 +1,11 @@
 # Mower Simulator | Real-time simulation of a robotic lawn mower 🕹️🚜🍃
 [![Contributors](https://img.shields.io/github/contributors/hbiegacz/mower_simulator?color=red)](https://github.com/hbiegacz/mower_simulator/graphs/contributors)
 [![Commit Activity](https://img.shields.io/badge/Commits-📈%20View%20Graph-orange)](https://github.com/hbiegacz/mower_simulator/graphs/commit-activity)
-[![Repo Size](https://img.shields.io/github/repo-size/hbiegacz/mower_simulator?color=yellow)](https://github.com/hbiegacz/mower_simulator)
-[![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-~2.5k-green?logo=git)](https://github.com/hbiegacz/mower_simulator)
-[![License](https://img.shields.io/github/license/hbiegacz/mower_simulator?color=blue)](LICENSE)
+[![GitHub commits](https://badgen.net/github/commits/hbiegacz/mower_simulator?color=yellow)](https://github.com/hbiegacz/mower_simulator/commit/)
+[![Repo Size](https://img.shields.io/github/repo-size/hbiegacz/mower_simulator?color=green)](https://github.com/hbiegacz/mower_simulator)
+[![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-~6.1k-blue?logo=git)](https://github.com/hbiegacz/mower_simulator)
+[![Test Coverage](https://img.shields.io/badge/Test_coverage-81%25-darkblue)](CODE/coverage.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 
 ***Mow Your Way to Coding Mastery***
 
