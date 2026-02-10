@@ -14,10 +14,14 @@ Take command of the mower's movements using the `controller` object. The applica
 
 ## 📺 Example of a simulation
 
-![Example of a simulation where we draw an 8](CODE/docs/drawing_an_8.gif)
-![Example of a simulation where we draw a star](CODE/docs/drawing_a_star.gif)
-![Example of a simulation where we draw a sine wave](CODE/docs/drawing_a_sine_wave.gif)
-![Example of a simulation where we draw a spiral](CODE/docs/drawing_a_spiral.gif)
+<table>
+  <tr>
+    <td align="center"><b>Drawing an 8</b><br/><img src="CODE/docs/drawing_an_8.gif" width="300" alt="Drawing an 8"/></td>
+    <td align="center"><b>Drawing a Star</b><br/><img src="CODE/docs/drawing_a_star.gif" width="300" alt="Drawing a star"/></td>
+    <td align="center"><b>Drawing a Sine Wave</b><br/><img src="CODE/docs/drawing_a_sine_wave.gif" width="300" alt="Drawing a sine wave"/></td>
+    <td align="center"><b>Drawing a Spiral</b><br/><img src="CODE/docs/drawing_a_spiral.gif" width="300" alt="Drawing a spiral"/></td>
+  </tr>
+</table>
 
 ## 🛠️ Architecture
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
