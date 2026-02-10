@@ -1,4 +1,4 @@
-# Mower Simulator | Real-Time Physics & Logic Simulator 🕹️🚜🍃
+# Mower Simulator | Real-time physics & logic simulator 🕹️🚜🍃
 [![Contributors](https://img.shields.io/github/contributors/hbiegacz/mower_simulator?color=red)](https://github.com/hbiegacz/mower_simulator/graphs/contributors)
 [![Commit Activity](https://img.shields.io/badge/Commits-📈%20View%20Graph-orange)](https://github.com/hbiegacz/mower_simulator/graphs/commit-activity)
 [![GitHub commits](https://badgen.net/github/commits/hbiegacz/mower_simulator?color=yellow)](https://github.com/hbiegacz/mower_simulator/commit/)
