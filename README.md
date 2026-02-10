@@ -1,7 +1,55 @@
-# mower_simulator
-Authors: *Hanna Biegacz, Maciej Cieślik*
+# Mower Simulator | Real-time simulation of a robotic lawn mower 🕹️🚜🍃
+[![Contributors](https://img.shields.io/github/contributors/hbiegacz/mower_simulator?color=red)](https://github.com/hbiegacz/mower_simulator/graphs/contributors)
+[![Commit Activity](https://img.shields.io/badge/Commits-📈%20View%20Graph-orange)](https://github.com/hbiegacz/mower_simulator/graphs/commit-activity)
+[![Repo Size](https://img.shields.io/github/repo-size/hbiegacz/mower_simulator?color=yellow)](https://github.com/hbiegacz/mower_simulator)
+[![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-~2.5k-green?logo=git)](https://github.com/hbiegacz/mower_simulator)
+[![License](https://img.shields.io/github/license/hbiegacz/mower_simulator?color=blue)](LICENSE)
 
-## Customizing mower movements
+***Mow Your Way to Coding Mastery***
+
+This simulator is a tool designed to help beginners and students **learn programming and logical thinking** in a fun, visual way. By controlling a virtual robotic lawn mower, users can experiment with algorithms, spatial reasoning, and real-time system control.
+
+### How it works
+Take command of the mower's movements using the `controller` object. The application provides a real-time environment where you can observe how your code directly affects the world around you, simulating position, orientation, and mowing paths as you go.
+
+## 📺 Example of a simulation
+
+![Example of a simulation where we draw an 8](CODE/docs/drawing_an_8.gif)
+![Example of a simulation where we draw a star](CODE/docs/drawing_a_star.gif)
+![Example of a simulation where we draw a sine wave](CODE/docs/drawing_a_sine_wave.gif)
+![Example of a simulation where we draw a spiral](CODE/docs/drawing_a_spiral.gif)
+
+## 🛠️ Architecture
+![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![CMake](https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white)
+![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=for-the-badge&logo=Qt&logoColor=white)
+![Google Test](https://img.shields.io/badge/Google%20Test-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+
+....
+
+## ▶️ Running the Simulation
+ Dependencies and necesary tools
+- **Libraries**: Google Test, Qt5, pthread
+- **Tools**: CMake, Make
+
+For a quick setup, please verify the contents of `setup_extra_dependencies.sh` and run it.
+
+In order to start the mower simulator, run:
+```
+./setup_extra_libraries.sh
+mkdir build/
+cd build/
+cmake ..
+make 
+./mower_simulator
+```
+After that you can run tests with the following command:
+```
+ctest
+```
+## ✍️ Customizing mower movements
 The mower movements can be customized by modifying the `Main.cc` file. There is a special method called 'customUserLogic' in which the user can define the mower's movements using the 'controller' object. 
 
 Aviable commands:
@@ -21,36 +69,8 @@ Aviable commands:
 Users are also able to customize other simulation parameters, such as the mower's speed and dimensions, as well as the lawn's dimensions.
 Another thing that can be customized is the overall simulation speed.
 
-## Running the Simulation
-In order to start the mower simulator, run:
-```
-./setup_extra_libraries.sh
-mkdir build/
-cd build/
-cmake ..
-make 
-./mower_simulator
-```
-After that you can run tests with the following command:
-```
-ctest
-```
-## Dependencies and necesary tools
-- **Libraries**: Google Test, Qt5, pthread
-- **Tools**: CMake, Make
 
-For a quick setup, please verify the contents of `setup_extra_dependencies.sh` and run it.
-
-## Example of a simulation
-
-![Example of a simulation where we draw an 8](docs/drawing_an_8.gif)
-![Example of a simulation where we draw a star](docs/drawing_a_star.gif)
-![Example of a simulation where we draw a sine wave](docs/drawing_a_sine_wave.gif)
-![Example of a simulation where we draw a spiral](docs/drawing_a_spiral.gif)
-
-
-
-## Interesting user logic implementations:
+## 💡 Examples of interesting user's programs
 
 **DRAWING A STAR**
 ```cpp
@@ -163,3 +183,5 @@ void customUserLogic(MowerController& controller) {
     }
 }
 ```
+
+***Thanks for reading this far! 📖***
